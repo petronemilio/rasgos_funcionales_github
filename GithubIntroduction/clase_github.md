@@ -24,7 +24,7 @@ Los **VCS** son una herramienta para registrar y organizar cambios en una serie 
 #### VCS locales
 [Git](https://gitforwindows.org/) es un VCS local con distribución en windows, mac y linux. Fue diseñado por Linus Trovalds para la creación de Linux y es de código abierto. 
 
-![Linus Trovalds... chico listo!](meta/linus_trovalds.png )
+![Linus Trovalds... chico listo!](../meta/linus_trovalds.png )
 
 Los archivos y directorios que están sujetos a un historial de versiones en git se guardan de forma **local**. En otras palabras, solo existen en tú computadora. Pero, ¿cómo funciona git?
 
@@ -37,10 +37,10 @@ A continuación vemos el flujo de trabajo en git:
      `Initilized empty Git repository in /rasgos_funcionales_github/.git` 
 2. Realizar cambios en el repositorio: crear archivos nuevos, cambiar o editar archivos.
 3. `$ git status` 
-4. **add:**`$ git add [FILENAME]`
-5. **commit:**`$ git commit -m "mensaje sobre los cambios"`
+4. **add:**`$ git add [FILENAME]`: Agrega los archivos que quieres que git les siga la pista.
+5. **commit:**`$ git commit -m "mensaje sobre los cambios"`: Después de modificar un archivo hay que dejar un mensaje claro y preciso sobre las modificaciones realizadas a un archivo.
 6. Repetir a partir del punto 2.
-![El workflow de git](meta/version_control.png)
+![El workflow de git](../meta/version_control.png)
 
 Esto podría parecer tedioso. Aprender los comandos y repetirlo podría quitar mucho tiempo.... ¿cuáles serían las ventajas de utilizar git?
 
@@ -64,7 +64,7 @@ El proceso general de trabajar en repositorios remotos es:
 Pull: This downloads any file updates from the GitHub repository and tries to incorporate them into your local copy. This step is often forgotten, which can cause some headaches later on, so try to remember to start your session with a pull. You can pull the latest code from GitHub with the blue Pull button in the Git tab of the (usually) top-right panel in RStudio.
 Make changes: At this point you can add more files, change files that exist, or delete files you don’t need any more. Just remember to save your changes.
 Add: The add command instructs Git that you would like to make Git aware of any changes you made to files on your local repository (saving isn’t enough in this case). After you have made your changes (and saved them!), add them by clicking the “Staged” box next to the file name in the Git tab of RStudio.
-Commit: And the last thing you’ll need to do to record those changes on your local Git repository is to commit the changes. In RStudio, click the “Commit” button in the Git tab. The dialog that opens will show the changes you are about to commit; be sure to write a commit message in the “Commit message:” dialog. Make it brief but informative. Do not skip the commit message, regardless of what Randall Munroe might say. Note only those changes that were added will be included in the commit.
+
 Push: Finally, you want to move those committed changes up to the remote (GitHub) repository. The green Push button will send any changes to GitHub. Note that you will need your GitHub ID and password to push changes to the remote repository. Also note that if you are pushing to a GitHub repository that you did not create, you will need to be added as a collaborator by the repository owner.
 Repeat: This step is pretty self-explanatory.
 
