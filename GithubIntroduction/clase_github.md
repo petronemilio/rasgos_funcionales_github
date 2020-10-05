@@ -1,5 +1,15 @@
 ## Introducción a Git y GitHub
 
+#### Requerimientos:
+
+Para poder llevar a cabo esta clase necesitas tener instalado:
+
+- R
+- R studio
+- git
+
+Además necesitas tener una cuenta de github. 
+
 #### ¿Qué vamos a ver durante la clase? 
 
 1.  Breve introducción a los sistemas de control de versiones (VCS, por sus siglas en inglés). 
@@ -14,11 +24,13 @@
   *   Un par de comandos más en github. 
   *   Lo mínimo y suficiente para usar una cuenta.
   *   Hacer introducción a hello world!
+  
+
+4. Usando Github desde R studio.
   *   Clonar un repositorio desde R studio.
 
-4.  Ventajas de usar Git y Github: reproducibilidad, organziación
+5.  Ventajas de usar Git y Github: reproducibilidad, organziación
  
-
 ### Sistemas de control de versiones
 
 Los **VCS** son una herramienta para registrar y organizar cambios en una serie de archivos y directorios. Los VCS hacen una base de datos con el historial de versiones de un proyecto. Git y Github son ejemplos de VCS pero no son los únicos programas que permiten hacer un control de versiones (por ejemplo, [mercurial](https://www.mercurial-scm.org/about) o [Subversion](http://subversion.apache.org/)). 
@@ -75,14 +87,15 @@ Enlistar las ventajas
 ### VCS remotos: Github
 
 Es un sitio web para trabajar y colaborar en proyectos que están sujetos a control de versiones basado en **git** y que guarda los repositorios en la red.
-Con el flujo de trabajo de git y entendiedo que es un commit y que es un branch ahora hay que agregar unos conceptos extras claves en github:
-1. **fork**:
-1. **push**: 
-2. **pull** y **pull request**: 
+Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `branch` ahora hay que agregar unos conceptos extras claves en github:
 
-Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado y nos vemos en 10 minutos.
+1. **fork**: cuando creas una copia de repositorio en tu cuenta de github a partir de otra cuenta de github.  
+2. **clone**: baja el repositorio remoto a tu cuenta local.
+3. **pull**: bajas la última versión de un repositorio remoto y se incorporan los cambios con tu repositorio local. 
+4. **push**: envias los cambios y comitts del repositorio local al repositorio reomoto u _online_. Esto solo funciona si tu eres dueño del repositorio remoto, de lo contrario se debe de hacer un `pull request`.
+5. **pull request**: si tu no eres propietario de un repositorio remoto debes de subir tus cambios como sugerencia de cambio. Tu no haces el `push`, sino que sugieres al autor que haga un `pull` de tus cambios. Una vez que el propietario del repositorio ha revisado y aceptado los cambios, fusiona las ramas con un `merge`.
 
-
+Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, has los pasos del ejercicio y nos vemos en 10 minutos.
 
 Buena guía del [workflow](https://guides.github.com/introduction/flow/)
 
@@ -90,13 +103,33 @@ El proceso general de trabajar en repositorios remotos es:
 
 **Pull** > Hacer cambios > **Add** > **Commit** > **Push** > Repeat
 
-Pull: This downloads any file updates from the GitHub repository and tries to incorporate them into your local copy. This step is often forgotten, which can cause some headaches later on, so try to remember to start your session with a pull. You can pull the latest code from GitHub with the blue Pull button in the Git tab of the (usually) top-right panel in RStudio.
-Make changes: At this point you can add more files, change files that exist, or delete files you don’t need any more. Just remember to save your changes.
-Add: The add command instructs Git that you would like to make Git aware of any changes you made to files on your local repository (saving isn’t enough in this case). After you have made your changes (and saved them!), add them by clicking the “Staged” box next to the file name in the Git tab of RStudio.
+### Usando Github desde R studio.
 
-Push: Finally, you want to move those committed changes up to the remote (GitHub) repository. The green Push button will send any changes to GitHub. Note that you will need your GitHub ID and password to push changes to the remote repository. Also note that if you are pushing to a GitHub repository that you did not create, you will need to be added as a collaborator by the repository owner.
-Repeat: This step is pretty self-explanatory.
+Ahora trataremos de hacer un repositorio usando R studio. Vamos a intentar clonar el repositorio que contiene a este archivo. Antes de clonarlo hay que hacer un `fork`. 
 
+1. Ve a la base del repositorio y busca la pestaña que dice `Fork`:
+
+![](../meta/fork.png)
+
+2. Después de tener una copia del repositorio en tú cuenta ahora hay que hacer una copia local utilizando R studio. Busca el botón verde que dice `Code`. Copia el url del repositorio y ve a R studio.
+
+![](../meta/clone.png)
+
+3. En R studio ve a File y selecciona New Project. 
+
+![](../meta/new_project.png)
+
+4. Selecciona la opción de Version control.
+
+![](../meta/git_project.png)
+
+5. Slecciona la opción Git.
+
+6. Agrega el url que copiamos de la página de Git. Además selecciona el directorio donde quieres que viva el repositorio local en tu computadora. 
+
+![](../meta/gitproject_rstudio.png)
+
+Si los pasos previos salieron bien estás listo para hacer una contribución a un repositorio clonado. 
 
 `## install if needed (do this exactly once)` 
 `## install.packages("usethis")`
