@@ -71,18 +71,13 @@ Para que git sepa cuál es el repositorio que queremos tener bajo versión de co
 
 Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen el repositorio principal o la **master** branch. Al crear una rama que sale de la rama principal es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo se hace un `merge` de la `branch scundaria` con la **master** branch.
 
+Un esquema de el proceso de hacer branches se ilustra en el siguiente esquema:
 
+![](../meta/branches.png)
 
-Si nos fijamos en el logotipo de git podemos ver la importancia de un  `branch` en el control de versiones. 
+Git es un buen programa para detectar los cambios en las diferentes `branches` y hacer los cambios necesarios al hacer un `merge` de las diferentes versiones del repositorio. Los branches permiten la colaboración de mucha gente en un proyecto. Los `branches` son muy importantes en el mantra de git y se refleja en el logotipo del programa. 
 
 ![Git symbol](../meta/git_symbol.png)
-
-Esto podría parecer tedioso. Aprender los comandos y repetirlo podría quitar mucho tiempo.... ¿cuáles serían las ventajas de utilizar git? 
-
-Enlistar las ventajas
-
-![](../meta/meme_github.png)
-
 
 ### VCS remotos: Github
 
@@ -102,6 +97,17 @@ Buena guía del [workflow](https://guides.github.com/introduction/flow/)
 El proceso general de trabajar en repositorios remotos es:
 
 **Pull** > Hacer cambios > **Add** > **Commit** > **Push** > Repeat
+
+### Ventajas de usar Git y Github
+
+Manejar los comandos... Aprender los comandos y repetirlo podría quitar mucho tiempo. Manejar muchas `branches` no parece ser algo muy práctico. Entonces, ¿cuáles serían las ventajas de utilizar git?
+
+- Permite organizar mejor tus proyectos.
+- Puedes recuperar versiones de repositorios completos pasados.
+
+![](../meta/meme_github.png)
+
+
 
 ### Usando Github desde R studio.
 
@@ -131,7 +137,14 @@ Ahora trataremos de hacer un repositorio usando R studio. Vamos a intentar clona
 
 Si los pasos previos salieron bien estás listo para hacer una contribución a un repositorio clonado. 
 
-`## install if needed (do this exactly once)` 
-`## install.packages("usethis")`
-`library(usethis)`
-`use_git_config(user.name = "Jane Doe", user.email = "jane@example.org") `
+#### Primera exploración de la base.
+En la siguiente sección el objetivo es entender las opciones que R studio y git nos ofrecen para modificar y ver nuestros repositorios.
+Si abres un repositorio desde R studio podemos ver las carpetas que componen al repositorio. También podemos abrir los archivos y modificarlos. Si modifico uno de los archivos del repositorio, ¿veríamos los cambios en el repositorio en github?
+
+Exploremos un poco las pestañas y opciones que r studio y git tienen para ofrecernos.
+
+Para concluir la clase, abre el script exploration_script.R que se encuentra dentro de la carpeta scripts.
+Verás que hay un par de cosas por resolver. Encuentra las soluciones con el código de R apropiado y has un pull request para que se modifique el script que se encuentra en github.
+
+
+
