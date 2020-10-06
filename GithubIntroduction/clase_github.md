@@ -15,15 +15,14 @@ Además necesitas tener una cuenta de [github](https://github.com/).
 1.  Breve introducción a los sistemas de control de versiones (VCS, por sus siglas en inglés). 
 
 2.  SCV locales: Git.
-    * Comandos básicos de Git. 
-    * Flujo de trabajo. 
-    * Workflow. 
-    * Conceptos útiles para entender cómo funciona el programa.
+    * Repositorios y su organización.
+    * Comandos básicos y flujo de trabajo. 
+    * `Branch` y `merge`: conceptos útiles para entender cómo funciona el programa.
 
 3.  SCV remotos : Github
+    * ¿Qué es github y cómo uso una cuenta?
     * Un par de comandos más en github. 
-    * Lo mínimo y suficiente para usar una cuenta.
-    * Hacer introducción a hello world!
+    * Hacer introducción con hello world!
   
 4.  Ventajas de usar Git y Github: reproducibilidad, organziación.
 
@@ -44,6 +43,8 @@ Los **VCS** son una herramienta para registrar y organizar cambios en una serie 
 
 Los archivos y directorios que están sujetos a un historial de versiones en git se guardan de forma **local**. En otras palabras, solo existen en tú computadora. Pero, ¿cómo funciona git?
 
+#### Repositorios y su organización.
+
 Lo primero que hay que hacer en git es definir el directorio que estará sujeto a un historial de versiones, es decir un **repositorio** (¡¡¡Ding, ding ding!!! Concepto importante). 
 ¿Cuál es la forma más común de organizar un repositorio?
 Aunque no hay un concenso es común encontrar repositorios que constan de cuatro directorios: 
@@ -61,6 +62,8 @@ Algunos ejemplos de como se organizan los repositorios:
 - [detectionfilter](https://github.com/TobiasRoth/detectionfilter)
 - [taxize](https://github.com/ropensci/taxize)
 
+#### Comandos básicos y flujo de trabajo. 
+
 Para que git sepa cuál es el repositorio que queremos tener bajo control de versiones se corre el comando `init`. Después se sigue un flujo de comandos que permite tener un buen seguimiento de las versiones que van cambiando con el tiempo. A continuación se presenta dicho flujo de trabajo:
 
 1. **init:** `$ git init` 
@@ -73,6 +76,7 @@ Para que git sepa cuál es el repositorio que queremos tener bajo control de ver
 
 ![El workflow de git](../meta/version_control.png)
 
+#### `Branch` y `merge`: conceptos útiles para entender cómo funciona el programa.
 
 Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen el repositorio principal o la **master** branch. Al crear una rama que sale de la rama principal es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo por el cuál se creo la rama secundaria, se hace un `merge` de la `branch scundaria` con la **master** branch.
 
@@ -90,6 +94,7 @@ Los branches permiten la colaboración de mucha gente en un proyecto. Los `branc
 
 ### VCS remotos: Github
 
+#### ¿Qué es github y como uso una cuenta?
 Es un sitio web para trabajar y colaborar en proyectos que están sujetos a control de versiones basado en **git** y que guarda los repositorios en la red. También es una especie de red social de código. La gente puede ver tu perfil y tus repositorios y tú puedes ver el perfil de otros usuarios. 
 
 Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `branch` ahora hay que agregar unos conceptos extras claves en github:
@@ -99,6 +104,8 @@ Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `bran
 3. **pull**: baja la última versión de un repositorio remoto y se incorporan los cambios con tu repositorio local. 
 4. **push**: envias los cambios y commits del repositorio local al repositorio reomoto u _online_. Esto solo funciona si tu eres dueño del repositorio remoto, de lo contrario se debe de hacer un `pull request`.
 5. **pull request**: si tu no eres propietario de un repositorio remoto debes de subir tus cambios como sugerencia de cambio. Tu no haces el `push`, sino que sugieres al autor que haga un `pull` de tus cambios. Una vez que el propietario del repositorio ha revisado y aceptado los cambios, fusiona las ramas con un `merge`.
+
+#### Hacer introducción con hello world!
 
 Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, haz los pasos del ejercicio y nos vemos en 10 minutos.
 
@@ -128,7 +135,6 @@ Aprender y ejecutar los comandos y repetirlo podría quitar mucho tiempo. Maneja
 - Manejar mejor la solución de problemas en un código al trabajar de forma colaborativa.
 
 - Tener experiencia en github es un muy buen elemento curricular.
-
 
 
 ### Usando Github desde R studio.
