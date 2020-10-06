@@ -164,7 +164,7 @@ Ahora hay que decirle a R studio donde está el ejecutable de Git. Ve a `Tools`>
 
 ![](../meta/rstudio_git_setup.png)
 
-**¡¡Ojo!!** /usr/bin es la ruta relativa a una buena parte de los archivos ejecutables en linux. Esto sginifica que en esa carpeta se encuentran archivos ejecutables de python y otros programas de linux. En mac tus archivos ejecutables se pueden guardar en /usr/local/bin. Si tienes dudas de donde está guardado tu git corre en una terminal el siguiente comando:
+**¡¡Ojo!!** /usr/bin es la ruta relativa a una buena parte de los archivos ejecutables en linux. Esto sginifica que en esa carpeta se encuentran archivos ejecutables de , por ejemplo, python y otros programas de linux. En mac y a veces en linux tus archivos ejecutables se pueden guardar en /usr/local/bin. Si tienes dudas de donde está guardado tu git corre en una terminal el siguiente comando:
 
 ```
 which git
@@ -174,6 +174,8 @@ Así podrás ver el lugar donde se encuentra git.
 
 En windows es común que git se instale en:
 `C:\Program Files (x86)/Git/bin/git.exe`
+
+Si aspi fuera el caso, agrga esa ruta en la pestaña `git executable` de tu configuración global en R studio. 
 
 Reinicia tu R studio para que todo este listo.
 
@@ -205,6 +207,9 @@ Después de esto vamos a intentar clonar el repositorio que contiene a este arch
 
 Si los pasos previos salieron bien estás listo para hacer una contribución a un repositorio clonado. 
 
+### Otra nota importante:
+Si forkeaste un repo y luego lo clonaste en R studio es importante que cada que lo vayas a modificar y utilizar realices un pull. De esa forma tendrás la última versión del repositorio y no la versíon que existía cuando hiciste el fork.
+
 #### Primera exploración de la base.
 
 En la siguiente sección el objetivo es entender las opciones que R studio y git nos ofrecen para modificar y ver nuestros repositorios.
@@ -214,9 +219,11 @@ Si abres un repositorio desde R studio podemos ver las carpetas que componen al 
 
 También podemos abrir los archivos y modificarlos. Si modifico uno de los archivos del repositorio, ¿veríamos los cambios en el repositorio en github? **No**. Los cambios solo quedarían en el repositorio local. Para subir los cambios github primero debemos hacer un `commit` de nuestros archivos modificados. (recuerda hacer commits con descripciónes claras).
 
-Busca la opción commit. Puedes picar el botón de la pestaña de git que se encuentra en la parte superior. Podrás observar los archivos que han sido modificados desde el último `commit`. Agrega los archivos que quieres que se registren el el historial de cambios y que reflejan tu mensaje en el `commit`. 
+Busca la opción commit. Puedes picar el botón de la pestaña de git que se encuentra en la parte superior de r studio. Podrás observar los archivos que han sido modificados desde el último `commit`. Agrega los archivos que quieres que se registren el el historial de cambios y que reflejan tu mensaje en el `commit`. 
 
 ![](../meta/commit_rstudio.png)
+
+Como puedes ver, la pestaña también muestra los cambios realizados al archivo. Después de hacer el commit podemos hacer el push al repositorio remoto.
 
 Para concluir la clase, abre el script `exploration_script.R` que se encuentra dentro de la carpeta scripts.
 
