@@ -4,11 +4,11 @@
 
 Para poder llevar a cabo esta clase necesitas tener instalado:
 
-- R
-- R studio
-- git
+- [R](https://cran.r-project.org/)
+- [R studio](https://rstudio.com/)
+- [git](https://git-scm.com/downloads)
 
-Además necesitas tener una cuenta de github. 
+Además necesitas tener una cuenta de [github](https://github.com/). 
 
 #### ¿Qué vamos a ver durante la clase? 
 
@@ -25,15 +25,16 @@ Además necesitas tener una cuenta de github.
   *   Lo mínimo y suficiente para usar una cuenta.
   *   Hacer introducción a hello world!
   
+4.  Ventajas de usar Git y Github: reproducibilidad, organziación
 
-4. Usando Github desde R studio.
+5. Usando Github desde R studio.
+  *   Configura tu cuenta de git en la computadora desde R studio.
   *   Clonar un repositorio desde R studio.
 
-5.  Ventajas de usar Git y Github: reproducibilidad, organziación
- 
+
 ### Sistemas de control de versiones
 
-Los **VCS** son una herramienta para registrar y organizar cambios en una serie de archivos y directorios. Los VCS hacen una base de datos con el historial de versiones de un proyecto. Git y Github son ejemplos de VCS pero no son los únicos programas que permiten hacer un control de versiones (por ejemplo, [mercurial](https://www.mercurial-scm.org/about) o [Subversion](http://subversion.apache.org/)). 
+Los **VCS** son una herramienta para registrar y organizar cambios en una serie de archivos y directorios. Los VCS hacen una base de datos del historial de versiones de un proyecto. Git y Github son ejemplos de VCS pero no son los únicos programas que permiten hacer un control de versiones (por ejemplo, [mercurial](https://www.mercurial-scm.org/about) o [Subversion](http://subversion.apache.org/)). 
 
 ### VCS locales: Git
 
@@ -52,7 +53,8 @@ Aunque no hay un concenso es común encontrar repositorios que constan de cuatro
 - figures
 - meta
 
-Además de esas carpetas los repositorios **siempre** tienen un archivo llamado **README**. El README file puede estar en fomrato markdown o en otros formatos pero siempre contiene la misma información. 
+Además de esas carpetas los repositorios **siempre** tienen un archivo llamado **README**. El README file puede estar en formato markdown o en otros formatos pero siempre contiene la misma información. ¿Cuál es esa información? 
+
 Algunos ejemplos de como se organizan los repositorios:
 - [Phytools](https://github.com/liamrevell/phytools/)
 
@@ -69,19 +71,24 @@ Para que git sepa cuál es el repositorio que queremos tener bajo versión de co
 ![El workflow de git](../meta/version_control.png)
 
 
-Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen el repositorio principal o la **master** branch. Al crear una rama que sale de la rama principal es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo se hace un `merge` de la `branch scundaria` con la **master** branch.
+Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen el repositorio principal o la **master** branch. Al crear una rama que sale de la rama principal es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo por el cuál se inicio la rama inicial, se hace un `merge` de la `branch scundaria` con la **master** branch.
 
-Un esquema de el proceso de hacer branches se ilustra en el siguiente esquema:
+Un esquema del proceso de hacer branches se ilustra en el siguiente esquema:
 
-![](../meta/branches.png)
+![Figura de [CSB](https://computingskillsforbiologists.com/)](../meta/branches.png)
 
-Git es un buen programa para detectar los cambios en las diferentes `branches` y hacer los cambios necesarios al hacer un `merge` de las diferentes versiones del repositorio. Los branches permiten la colaboración de mucha gente en un proyecto. Los `branches` son muy importantes en el mantra de git y se refleja en el logotipo del programa. 
+Git es un buen programa para detectar los cambios en las diferentes `branches` y dejar una versión final al hacer un `merge` de las diferentes versiones del repositorio. ¿Qué pasaría si haces un branch y haces el mismo cambio en la misma línea de la `master` branch y de una `secundaria`? 
+
+![](../meta/meme_conflicts.png)
+
+Los branches permiten la colaboración de mucha gente en un proyecto. Los `branches` son muy importantes en el mantra de git y se refleja en el logotipo del programa. 
 
 ![Git symbol](../meta/git_symbol.png)
 
 ### VCS remotos: Github
 
-Es un sitio web para trabajar y colaborar en proyectos que están sujetos a control de versiones basado en **git** y que guarda los repositorios en la red.
+Es un sitio web para trabajar y colaborar en proyectos que están sujetos a control de versiones basado en **git** y que guarda los repositorios en la red. También es una especie de red social de código. La gente puede ver tu perfil y tus repositorios y tú puedes ver el perfil de otros usuarios. 
+
 Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `branch` ahora hay que agregar unos conceptos extras claves en github:
 
 1. **fork**: cuando creas una copia de repositorio en tu cuenta de github a partir de otra cuenta de github.  
@@ -92,26 +99,55 @@ Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `bran
 
 Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, has los pasos del ejercicio y nos vemos en 10 minutos.
 
-Buena guía del [workflow](https://guides.github.com/introduction/flow/)
+Otras guías que tepueden ayudar a entender como funciona github las encuentras en las siguientes ligas:
 
-El proceso general de trabajar en repositorios remotos es:
+- Buena guía del [workflow](https://guides.github.com/introduction/flow/)
+- Juego de [branches](https://learngitbranching.js.org/?locale=es_AR). Noten las formas de escritura del cono sur. 
 
-**Pull** > Hacer cambios > **Add** > **Commit** > **Push** > Repeat
+
+El proceso general de trabajar en repositorios remotos personales:
+
+**Pull** > **Hacer cambios** > **Add** > **Commit** > **Push** > **Repeat**
+                                           
+¿Cómo sería el proceso de cambiar un repositorio del que no eres dueño ( __forkeado__ )?                                                 
 
 ### Ventajas de usar Git y Github
 
-Manejar los comandos... Aprender los comandos y repetirlo podría quitar mucho tiempo. Manejar muchas `branches` no parece ser algo muy práctico. Entonces, ¿cuáles serían las ventajas de utilizar git?
+Manejar los comandos... Aprender los comandos y repetirlo podría quitar mucho tiempo. Manejar muchas `branches` no parece ser algo muy práctico. Entonces, ¿cuáles serían las ventajas de utilizar git y github?
 
 - Permite organizar mejor tus proyectos.
-- Puedes recuperar versiones de repositorios completos pasados.
 
 ![](../meta/meme_github.png)
 
+- Puedes recuperar versiones de repositorios completos pasados.
+
+- Te fuerza a compartir tu código y eso al final hace que la ciencia sea más abierta y reproducible.
+
+- Manejar mejor la solución de problemas en un código al trabajar de forma colaborativa.
+
+- Tener experiencia en github es un muy buen elemento curricular.
 
 
 ### Usando Github desde R studio.
 
-Ahora trataremos de hacer un repositorio usando R studio. Vamos a intentar clonar el repositorio que contiene a este archivo. Antes de clonarlo hay que hacer un `fork`. 
+Ahora trataremos de hacer un repositorio usando R studio. Antes de clonar el repositorio es importante configurar git en tu computadora. Esto se puede hacer de varias formas:
+
+1. Si tienes familiaridad con la terminal (Mac, Linux) abre una terminal y escribe:
+``` bash
+git config --global user.name "petronemilio"
+git config --global user.email "emilio.petrone@st.ib.unam.mx"
+```
+También puedes abrir una terminal desde R studio y correr los comandos del paso 1.
+
+2. Otra opción es correr en el promt de R o en un script los siguientes comandos:
+``` R
+    ## install if needed (do this exactly once) 
+    install.packages("usethis")
+    library(usethis)
+    use_git_config(user.name = "petronemilio", user.email = "emilio.petrone@st.ib.unam.mx")
+```    
+
+Después de esto vamos a intentar clonar el repositorio que contiene a este archivo. Antes de clonarlo hay que hacer un `fork`. 
 
 1. Ve a la base del repositorio y busca la pestaña que dice `Fork`:
 
@@ -138,6 +174,7 @@ Ahora trataremos de hacer un repositorio usando R studio. Vamos a intentar clona
 Si los pasos previos salieron bien estás listo para hacer una contribución a un repositorio clonado. 
 
 #### Primera exploración de la base.
+
 En la siguiente sección el objetivo es entender las opciones que R studio y git nos ofrecen para modificar y ver nuestros repositorios.
 Si abres un repositorio desde R studio podemos ver las carpetas que componen al repositorio. También podemos abrir los archivos y modificarlos. Si modifico uno de los archivos del repositorio, ¿veríamos los cambios en el repositorio en github?
 
