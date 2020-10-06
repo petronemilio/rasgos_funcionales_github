@@ -164,6 +164,17 @@ Ahora hay que decirle a R studio donde está el ejecutable de Git. Ve a `Tools`>
 
 ![](../meta/rstudio_git_setup.png)
 
+**¡¡Ojo!!** /usr/bin es la ruta relativa a una buena parte de los archivos ejecutables en linux. Esto sginifica que en esa carpeta se encuentran archivos ejecutables de python y otros programas de linux. En mac tus archivos ejecutables se pueden guardar en /usr/local/bin. Si tienes dudas de donde está guardado tu git corre en una terminal el siguiente comando:
+
+```
+which git
+```
+
+Así podrás ver el lugar donde se encuentra git. 
+
+En windows es común que git se instale en:
+`C:\Program Files (x86)/Git/bin/git.exe`
+
 Reinicia tu R studio para que todo este listo.
 
 #### Clonación de un repositorio desde R studio
@@ -197,9 +208,15 @@ Si los pasos previos salieron bien estás listo para hacer una contribución a u
 #### Primera exploración de la base.
 
 En la siguiente sección el objetivo es entender las opciones que R studio y git nos ofrecen para modificar y ver nuestros repositorios.
-Si abres un repositorio desde R studio podemos ver las carpetas que componen al repositorio. También podemos abrir los archivos y modificarlos. Si modifico uno de los archivos del repositorio, ¿veríamos los cambios en el repositorio en github?
+Si abres un repositorio desde R studio podemos ver las carpetas que componen al repositorio.
 
-Exploremos un poco las pestañas y opciones que r studio y git tienen para ofrecernos.
+![](../meta/repositorio_rstudio.png)
+
+También podemos abrir los archivos y modificarlos. Si modifico uno de los archivos del repositorio, ¿veríamos los cambios en el repositorio en github? **No**. Los cambios solo quedarían en el repositorio local. Para subir los cambios github primero debemos hacer un `commit` de nuestros archivos modificados. (recuerda hacer commits con descripciónes claras).
+
+Busca la opción commit. Puedes picar el botón de la pestaña de git que se encuentra en la parte superior. Podrás observar los archivos que han sido modificados desde el último `commit`. Agrega los archivos que quieres que se registren el el historial de cambios y que reflejan tu mensaje en el `commit`. 
+
+![](../meta/commit_rstudio.png)
 
 Para concluir la clase, abre el script `exploration_script.R` que se encuentra dentro de la carpeta scripts.
 
