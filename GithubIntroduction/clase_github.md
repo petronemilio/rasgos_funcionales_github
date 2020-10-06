@@ -109,6 +109,8 @@ Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `bran
 
 Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, haz los pasos del ejercicio y nos vemos en 10 minutos.
 
+El proceso de hacer ramas se puede poner muy complicado. Aquí dejo un link para que vean un modelo exitoso de [branches](https://nvie.com/posts/a-successful-git-branching-model/)!
+
 El proceso general de trabajar en repositorios remotos personales:
 
 **Pull** > **Hacer cambios** > **Add** > **Commit** > **Push** > **Repeat**
