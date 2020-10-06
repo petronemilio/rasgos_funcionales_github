@@ -15,21 +15,21 @@ Además necesitas tener una cuenta de [github](https://github.com/).
 1.  Breve introducción a los sistemas de control de versiones (VCS, por sus siglas en inglés). 
 
 2.  SCV locales: Git.
-  *   Comandos básicos de Git. 
-  *   Flujo de trabajo. 
-  *   Workflow. 
-  *   Conceptos útiles para entender cómo funciona el programa.
+    * Comandos básicos de Git. 
+    * Flujo de trabajo. 
+    * Workflow. 
+    * Conceptos útiles para entender cómo funciona el programa.
 
 3.  SCV remotos : Github
-  *   Un par de comandos más en github. 
-  *   Lo mínimo y suficiente para usar una cuenta.
-  *   Hacer introducción a hello world!
+    * Un par de comandos más en github. 
+    * Lo mínimo y suficiente para usar una cuenta.
+    * Hacer introducción a hello world!
   
-4.  Ventajas de usar Git y Github: reproducibilidad, organziación
+4.  Ventajas de usar Git y Github: reproducibilidad, organziación.
 
 5. Usando Github desde R studio.
-  *   Configura tu cuenta de git en la computadora desde R studio.
-  *   Clonar un repositorio desde R studio.
+    * Configura tu cuenta de git en la computadora desde R studio.
+    * Clonar un repositorio desde R studio.
 
 
 ### Sistemas de control de versiones
@@ -48,17 +48,20 @@ Lo primero que hay que hacer en git es definir el directorio que estará sujeto 
 ¿Cuál es la forma más común de organizar un repositorio?
 Aunque no hay un concenso es común encontrar repositorios que constan de cuatro directorios: 
 
-- data
-- scripts/bin
-- figures
-- meta
+- **data**
+- **scripts/bin**
+- **figures**
+- **meta**
 
-Además de esas carpetas los repositorios **siempre** tienen un archivo llamado **README**. El README file puede estar en formato markdown o en otros formatos pero siempre contiene la misma información. ¿Cuál es esa información? 
+Además de esas carpetas los repositorios **siempre** tienen un archivo llamado **README**. El **README** file puede estar en formato [markdown](https://www.markdownguide.org/getting-started/) o en otros formatos pero siempre contiene la misma información. ¿Cuál es esa información? 
 
 Algunos ejemplos de como se organizan los repositorios:
-- [Phytools](https://github.com/liamrevell/phytools/)
 
-Para que git sepa cuál es el repositorio que queremos tener bajo versión de controles se corre el comando `init`. Después se sigue un flujo de comandos que permite tener un buen seguimiento de las versiones que van cambiando con el tiempo. A continuación se presenta dicho flujo de trabajo:
+- [Phytools](https://github.com/liamrevell/phytools/)
+- [detectionfilter](https://github.com/TobiasRoth/detectionfilter)
+- [taxize](https://github.com/ropensci/taxize)
+
+Para que git sepa cuál es el repositorio que queremos tener bajo control de versiones se corre el comando `init`. Después se sigue un flujo de comandos que permite tener un buen seguimiento de las versiones que van cambiando con el tiempo. A continuación se presenta dicho flujo de trabajo:
 
 1. **init:** `$ git init` 
      `Initilized empty Git repository in /rasgos_funcionales_github/.git` 
@@ -71,7 +74,7 @@ Para que git sepa cuál es el repositorio que queremos tener bajo versión de co
 ![El workflow de git](../meta/version_control.png)
 
 
-Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen el repositorio principal o la **master** branch. Al crear una rama que sale de la rama principal es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo por el cuál se inicio la rama inicial, se hace un `merge` de la `branch scundaria` con la **master** branch.
+Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen el repositorio principal o la **master** branch. Al crear una rama que sale de la rama principal es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo por el cuál se creo la rama secundaria, se hace un `merge` de la `branch scundaria` con la **master** branch.
 
 Un esquema del proceso de hacer branches se ilustra en el siguiente esquema:
 
@@ -91,29 +94,28 @@ Es un sitio web para trabajar y colaborar en proyectos que están sujetos a cont
 
 Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `branch` ahora hay que agregar unos conceptos extras claves en github:
 
-1. **fork**: cuando creas una copia de repositorio en tu cuenta de github a partir de otra cuenta de github.  
+1. **fork**: cuando creas una copia de un repositorio en tu cuenta de github a partir de otra cuenta de github. Más documentación del `fork` en [github](https://docs.github.com/en/enterprise-server@2.20/github/getting-started-with-github/fork-a-repo#fork-an-example-repository)  
 2. **clone**: baja el repositorio remoto a tu cuenta local.
-3. **pull**: bajas la última versión de un repositorio remoto y se incorporan los cambios con tu repositorio local. 
-4. **push**: envias los cambios y comitts del repositorio local al repositorio reomoto u _online_. Esto solo funciona si tu eres dueño del repositorio remoto, de lo contrario se debe de hacer un `pull request`.
+3. **pull**: baja la última versión de un repositorio remoto y se incorporan los cambios con tu repositorio local. 
+4. **push**: envias los cambios y commits del repositorio local al repositorio reomoto u _online_. Esto solo funciona si tu eres dueño del repositorio remoto, de lo contrario se debe de hacer un `pull request`.
 5. **pull request**: si tu no eres propietario de un repositorio remoto debes de subir tus cambios como sugerencia de cambio. Tu no haces el `push`, sino que sugieres al autor que haga un `pull` de tus cambios. Una vez que el propietario del repositorio ha revisado y aceptado los cambios, fusiona las ramas con un `merge`.
 
-Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, has los pasos del ejercicio y nos vemos en 10 minutos.
-
-Otras guías que tepueden ayudar a entender como funciona github las encuentras en las siguientes ligas:
-
-- Buena guía del [workflow](https://guides.github.com/introduction/flow/)
-- Juego de [branches](https://learngitbranching.js.org/?locale=es_AR). Noten las formas de escritura del cono sur. 
-
+Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, haz los pasos del ejercicio y nos vemos en 10 minutos.
 
 El proceso general de trabajar en repositorios remotos personales:
 
 **Pull** > **Hacer cambios** > **Add** > **Commit** > **Push** > **Repeat**
                                            
-¿Cómo sería el proceso de cambiar un repositorio del que no eres dueño ( __forkeado__ )?                                                 
+¿Cómo sería el proceso de cambiar un repositorio del que no eres dueño ( __forkeado__ )?          
+Otras guías que te pueden ayudar a entender como funciona github las encuentras en las siguientes ligas:
+
+- Buena guía del [workflow](https://guides.github.com/introduction/flow/)
+- Juego de [branches](https://learngitbranching.js.org/?locale=es_AR). 
+
 
 ### Ventajas de usar Git y Github
 
-Manejar los comandos... Aprender los comandos y repetirlo podría quitar mucho tiempo. Manejar muchas `branches` no parece ser algo muy práctico. Entonces, ¿cuáles serían las ventajas de utilizar git y github?
+Aprender y ejecutar los comandos y repetirlo podría quitar mucho tiempo. Manejar muchas `branches` no parece ser algo muy práctico. Entonces, ¿cuáles serían las ventajas de utilizar git y github?
 
 - Permite organizar mejor tus proyectos.
 
@@ -128,7 +130,10 @@ Manejar los comandos... Aprender los comandos y repetirlo podría quitar mucho t
 - Tener experiencia en github es un muy buen elemento curricular.
 
 
+
 ### Usando Github desde R studio.
+
+#### Preparación inicial
 
 Ahora trataremos de hacer un repositorio usando R studio. Antes de clonar el repositorio es importante configurar git en tu computadora. Esto se puede hacer de varias formas:
 
@@ -145,7 +150,15 @@ También puedes abrir una terminal desde R studio y correr los comandos del paso
     install.packages("usethis")
     library(usethis)
     use_git_config(user.name = "petronemilio", user.email = "emilio.petrone@st.ib.unam.mx")
-```    
+```  
+
+Ahora hay que decirle a R studio donde está el ejecutable de Git. Ve a `Tools`> `Global Options`. Se abrirá un cuadro de diálogo que dice **Options** y vayan a la opción de Git/SVN. 
+
+![](../meta/rstudio_git_setup.png)
+
+Reinicia tu R studio para que todo este listo.
+
+#### Clonación de un repositorio desde R studio
 
 Después de esto vamos a intentar clonar el repositorio que contiene a este archivo. Antes de clonarlo hay que hacer un `fork`. 
 
@@ -180,8 +193,11 @@ Si abres un repositorio desde R studio podemos ver las carpetas que componen al 
 
 Exploremos un poco las pestañas y opciones que r studio y git tienen para ofrecernos.
 
-Para concluir la clase, abre el script exploration_script.R que se encuentra dentro de la carpeta scripts.
-Verás que hay un par de cosas por resolver. Encuentra las soluciones con el código de R apropiado y has un pull request para que se modifique el script que se encuentra en github.
+Para concluir la clase, abre el script `exploration_script.R` que se encuentra dentro de la carpeta scripts.
 
+Verás que hay un par de cosas por resolver. Encuentra las soluciones con el código de R apropiado y has un `pull request` para que se modifique el script que se encuentra en github.
 
+Si quieres ver más información de git, github y R studio te dejo un para de ligas con más información:
 
+- [Jenny Bryan tutorial](https://happygitwithr.com/)
+- [R chapter](https://r-pkgs.org/git.html)
