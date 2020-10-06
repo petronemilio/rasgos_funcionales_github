@@ -113,7 +113,7 @@ El proceso general de trabajar en repositorios remotos personales:
 
 **Pull** > **Hacer cambios** > **Add** > **Commit** > **Push** > **Repeat**
                                            
-¿Cómo sería el proceso de cambiar un repositorio del que no eres dueño ( __forkeado__ )?          
+¿Cómo sería el proceso de cambiar un repositorio __forkeado__ para que el dueño realice los cambios?          
 Otras guías que te pueden ayudar a entender como funciona github las encuentras en las siguientes ligas:
 
 - Buena guía del [workflow](https://guides.github.com/introduction/flow/)
@@ -150,7 +150,7 @@ git config --global user.email "emilio.petrone@st.ib.unam.mx"
 ```
 También puedes abrir una terminal desde R studio y correr los comandos del paso 1.
 
-2. Otra opción es correr en el promt de R o en un script los siguientes comandos:
+2. Otra opción es correr en el prompt de R o en un script los siguientes comandos:
 ``` R
     ## install if needed (do this exactly once) 
     install.packages("usethis")
