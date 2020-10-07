@@ -175,11 +175,10 @@ Así podrás ver el lugar donde se encuentra git.
 En windows es común que git se instale en:
 `C:\Program Files (x86)/Git/bin/git.exe`
 
-Si aspi fuera el caso, agrga esa ruta en la pestaña `git executable` de tu configuración global en R studio. 
-
+Si así fuera el caso, agrga esa ruta en la pestaña `git executable` de tu configuración global en R studio. 
 Reinicia tu R studio para que todo este listo.
 
-#### Clonación de un repositorio desde R studio
+### Clonación de un repositorio desde R studio
 
 Después de esto vamos a intentar clonar el repositorio que contiene a este archivo. Antes de clonarlo hay que hacer un `fork`. 
 
@@ -207,10 +206,10 @@ Después de esto vamos a intentar clonar el repositorio que contiene a este arch
 
 Si los pasos previos salieron bien estás listo para hacer una contribución a un repositorio clonado. 
 
-### Otra nota importante:
+#### Otra nota importante:
 Si forkeaste un repo y luego lo clonaste en R studio es importante que cada que lo vayas a modificar y utilizar realices un pull. De esa forma tendrás la última versión del repositorio y no la versíon que existía cuando hiciste el fork.
 
-#### Primera exploración de la base.
+### Primera exploración de la base.
 
 En la siguiente sección el objetivo es entender las opciones que R studio y git nos ofrecen para modificar y ver nuestros repositorios.
 Si abres un repositorio desde R studio podemos ver las carpetas que componen al repositorio.
