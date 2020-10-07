@@ -227,9 +227,15 @@ Como puedes ver, la pestaña también muestra los cambios realizados al archivo.
 
 Para concluir la clase, abre el script `exploration_script.R` que se encuentra dentro de la carpeta scripts.
 
-Verás que hay un par de cosas por resolver. Encuentra las soluciones con el código de R apropiado y has un `pull request` para que se modifique el script que se encuentra en github.
+Verás que hay un par de cosas por resolver. Encuentra las soluciones con el código de R apropiado y haz un `pull request` para que se modifique el script que se encuentra en github. Para hacer el `pull request` crea una nueva rama. El nombre de la rama debe de reflejar la solución que estás buscando (por ejemplo: exploration_script_solved). Luego haz la modificación del script en esa rama, agrega un commit y realiza un push para que el cambio llegue a tu repositorio remoto.
+En la siguiente figura se muestra el ícono que permite crear nuevas ramas.
 
-Si quieres ver más información de git, github y R studio te dejo un para de ligas con más información:
+![](../meta/branch_rstudio.png)
+
+El último paso consiste en ir a tu cuenta de github y hacer un `pull request` para que el dueño del repositorio logre ver tus cambios y decida si hace los cambios que tu estás solicitando.
+
+
+Si quieres ver más información de git, github y R studio te dejo un para de ligas con más detalles:
 
 - [Jenny Bryan tutorial](https://happygitwithr.com/)
 - [R chapter](https://r-pkgs.org/git.html)
