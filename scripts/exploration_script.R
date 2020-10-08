@@ -19,7 +19,9 @@ length(levels(base_rasgos$family))
 
 #How many species do we have per family?
 table(base_rasgos$family)
-#Can we sort de table from families with more species to families with less?
+#Can we sort de table from families with more species to families with less species?
+#Hacer tabla en orden decreciente de familias con más especies a familias con menos especies.
+sort(table(base_rasgos$family), decreasing = TRUE)
 
 
 
