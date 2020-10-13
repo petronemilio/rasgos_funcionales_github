@@ -18,7 +18,11 @@ Durante esta sesión comenzaremos a trabajar los datos que hemos estado colectan
 
 3.Después de entender la estructura general de la base que abriste en Excel, importa los datos a R.
 ```{r, echo=TRUE}
+<<<<<<< HEAD
 datos2 <- read.csv("../Data/2020_10_08_Base.csv")
+=======
+datos2 <- read.csv("2020_10_08_Base.csv")
+>>>>>>> ce7d2374a30b276dcf5deb516eab998d7261aa8e
 ```
 
 4.Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
@@ -41,12 +45,15 @@ str(datos)
 #Estudiantes deberán corregir los guiones en la base original hasta que ya no tengamos problemas
 #Hay problemas en minlongpeciolo, minanchohoja, maxanchohoja, tipo.hoja
 ```
+<<<<<<< HEAD
 6.1. Si las variables relacionadas con el tamaño de hojas son leídas como factores conviertelas a númericas.
 ```{r, echo=TRUE}
 names <- c("min.long.hoja", "max.long.hoja", "min.long.peciolo", "max.long.peciolo", "min.long.lamina", "max.long.lamina", "min.ancho.hoja", "max.ancho.hoja")
 datos[,names] <- lapply(datos[,names] , as.numeric)
 str(datos)
 ```
+=======
+>>>>>>> ce7d2374a30b276dcf5deb516eab998d7261aa8e
 
 7.Pide a R que te muestre la dimensión del objeto con los datos. También pídele que te muestre los primeros y los últimos datos
 ```{r, echo=TRUE}
@@ -105,7 +112,11 @@ sd(datos$VD.base.um, na.rm=TRUE)### sd a través de sd()
 
 17.Calcula el coeficiente de variación para la variable diámetro de vaso en la base.
 ```{r, echo=TRUE}
+<<<<<<< HEAD
 cvm <- (sd(datos$VD.base.um, na.rm=TRUE)/mean(datos$VD.base.um, na.rm=TRUE))*100
+=======
+cvm <- (sd(datos$VD.base.um, na.rm=TRUE)/mean(datos$max.long.hoja, na.rm=TRUE))*100
+>>>>>>> ce7d2374a30b276dcf5deb516eab998d7261aa8e
 cvm
 ```
 18.Calcula las principales estadísticas descriptivas con la instrucción summary() para las especies con diámetro de vaso basal mayor a 100. ¿Cuántas especies tienen ese tamaño de vasos en la base?
