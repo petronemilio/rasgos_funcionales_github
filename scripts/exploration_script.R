@@ -14,14 +14,19 @@ base_rasgos$order<- as.factor(base_rasgos$order)
 base_rasgos$family <- as.factor(base_rasgos$family)
 
 #How many orders do we have?
-length(levels(base_rasgos$order))
+order<-c(base_rasgos$order)
+order<-factor(order)
+length(levels(order))
 #We have 56 orders
 #How many families do we have?
-length(levels(base_rasgos$family))
+family<-c(base_rasgos$family)
+family<-factor(family)
+length(levels(family))
 #We have 175 families
 
 #How many species do we have per family?
 table(base_rasgos$family)
+
 #Can we sort de table from families with more species to families with less species?
 #Hacer tabla en orden decreciente de familias con más especies a familias con menos especies.
 table(base_rasgos$family)
