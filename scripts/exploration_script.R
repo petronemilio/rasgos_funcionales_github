@@ -9,6 +9,9 @@ base_rasgos <- read.csv("../data/Base_Clase_Rasgos.csv")
 
 #What is the structure in the data base
 str(base_rasgos)
+## converir variables a factor
+base_rasgos$order<- as.factor(base_rasgos$order)
+base_rasgos$family <- as.factor(base_rasgos$family)
 
 #How many orders do we have?
 length(levels(base_rasgos$order))
@@ -23,6 +26,11 @@ table(base_rasgos$family)
 #Hacer tabla en orden decreciente de familias con más especies a familias con menos especies.
 table(base_rasgos$family)
 
+# si, con el comando sort
+sort(table(base_rasgos$family))
+# por default la tabla está en orden creciente, usar decreasing=TRUE para invertir el orden
 
+sort(table(base_rasgos$family), decreasing=TRUE)
+## listo...
 
 
