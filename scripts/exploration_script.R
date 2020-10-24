@@ -39,4 +39,6 @@ sort(table(base_rasgos$family), decreasing=TRUE)
 
 ## listo...
 
+###THIS IS NOT THE SAME!!!
+
 
