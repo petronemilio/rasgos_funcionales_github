@@ -1,4 +1,4 @@
-####This is an exploration script of the data base Base_Clase_Ragos.csv
+####This is an exploration script of the data base Base_Clase_Rasgos.csv
 
 #The first thing we need to do is loading the database.
 #Probably is always better to set the working directory in the scripts folders.
@@ -9,7 +9,7 @@ base_rasgos <- read.csv("../data/Base_Clase_Rasgos.csv")
 
 #What is the structure in the data base
 str(base_rasgos)
-## converir variables a factor
+## Turn variables to factors
 base_rasgos$order<- as.factor(base_rasgos$order)
 base_rasgos$family <- as.factor(base_rasgos$family)
 
@@ -28,14 +28,15 @@ length(levels(family))
 table(base_rasgos$family)
 
 #Can we sort de table from families with more species to families with less species?
-#Hacer tabla en orden decreciente de familias con más especies a familias con menos especies.
+#Make table in decreasing order of species per family
 table(base_rasgos$family)
 
-# si, con el comando sort
+# yes, with sort command
 sort(table(base_rasgos$family))
-# por default la tabla está en orden creciente, usar decreasing=TRUE para invertir el orden
 
+#As default, this table appears in increasing order. Use decreasing=TRUE for inverting order
 sort(table(base_rasgos$family), decreasing=TRUE)
+
 ## listo...
 
 
