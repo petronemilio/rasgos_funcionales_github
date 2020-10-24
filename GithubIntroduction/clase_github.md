@@ -109,6 +109,8 @@ Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `bran
 
 Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, haz los pasos del ejercicio y nos vemos en 10 minutos.
 
+El proceso de hacer ramas se puede poner muy complicado. Aquí dejo un link para que vean un modelo exitoso de [branches](https://nvie.com/posts/a-successful-git-branching-model/)!
+
 El proceso general de trabajar en repositorios remotos personales:
 
 **Pull** > **Hacer cambios** > **Add** > **Commit** > **Push** > **Repeat**
@@ -162,9 +164,21 @@ Ahora hay que decirle a R studio donde está el ejecutable de Git. Ve a `Tools`>
 
 ![](../meta/rstudio_git_setup.png)
 
+**¡¡Ojo!!** /usr/bin es la ruta relativa a una buena parte de los archivos ejecutables en linux. Esto sginifica que en esa carpeta se encuentran archivos ejecutables de , por ejemplo, python y otros programas de linux. En mac y a veces en linux tus archivos ejecutables se pueden guardar en /usr/local/bin. Si tienes dudas de donde está guardado tu git corre en una terminal el siguiente comando:
+
+```
+which git
+```
+
+Así podrás ver el lugar donde se encuentra git. 
+
+En windows es común que git se instale en:
+`C:\Program Files (x86)/Git/bin/git.exe`
+
+Si así fuera el caso, agrga esa ruta en la pestaña `git executable` de tu configuración global en R studio. 
 Reinicia tu R studio para que todo este listo.
 
-#### Clonación de un repositorio desde R studio
+### Clonación de un repositorio desde R studio
 
 Después de esto vamos a intentar clonar el repositorio que contiene a este archivo. Antes de clonarlo hay que hacer un `fork`. 
 
@@ -192,18 +206,35 @@ Después de esto vamos a intentar clonar el repositorio que contiene a este arch
 
 Si los pasos previos salieron bien estás listo para hacer una contribución a un repositorio clonado. 
 
-#### Primera exploración de la base.
+#### Otra nota importante:
+Si forkeaste un repo y luego lo clonaste en R studio es importante que cada que lo vayas a modificar y utilizar realices un pull. De esa forma tendrás la última versión del repositorio y no la versíon que existía cuando hiciste el fork.
+
+### Primera exploración de la base.
 
 En la siguiente sección el objetivo es entender las opciones que R studio y git nos ofrecen para modificar y ver nuestros repositorios.
-Si abres un repositorio desde R studio podemos ver las carpetas que componen al repositorio. También podemos abrir los archivos y modificarlos. Si modifico uno de los archivos del repositorio, ¿veríamos los cambios en el repositorio en github?
+Si abres un repositorio desde R studio podemos ver las carpetas que componen al repositorio.
 
-Exploremos un poco las pestañas y opciones que r studio y git tienen para ofrecernos.
+![](../meta/repositorio_rstudio.png)
+
+También podemos abrir los archivos y modificarlos. Si modifico uno de los archivos del repositorio, ¿veríamos los cambios en el repositorio en github? **No**. Los cambios solo quedarían en el repositorio local. Para subir los cambios github primero debemos hacer un `commit` de nuestros archivos modificados. (recuerda hacer commits con descripciónes claras).
+
+Busca la opción commit. Puedes picar el botón de la pestaña de git que se encuentra en la parte superior de r studio. Podrás observar los archivos que han sido modificados desde el último `commit`. Agrega los archivos que quieres que se registren el el historial de cambios y que reflejan tu mensaje en el `commit`. 
+
+![](../meta/commit_rstudio.png)
+
+Como puedes ver, la pestaña también muestra los cambios realizados al archivo. Después de hacer el commit podemos hacer el push al repositorio remoto.
 
 Para concluir la clase, abre el script `exploration_script.R` que se encuentra dentro de la carpeta scripts.
 
-Verás que hay un par de cosas por resolver. Encuentra las soluciones con el código de R apropiado y has un `pull request` para que se modifique el script que se encuentra en github.
+Verás que hay un par de cosas por resolver. Encuentra las soluciones con el código de R apropiado y haz un `pull request` para que se modifique el script que se encuentra en github. Para hacer el `pull request` crea una nueva rama. El nombre de la rama debe de reflejar la solución que estás buscando (por ejemplo: exploration_script_solved). Luego haz la modificación del script en esa rama, agrega un commit y realiza un push para que el cambio llegue a tu repositorio remoto.
+En la siguiente figura se muestra el ícono que permite crear nuevas ramas.
 
-Si quieres ver más información de git, github y R studio te dejo un para de ligas con más información:
+![](../meta/branch_rstudio.png)
+
+El último paso consiste en ir a tu cuenta de github y hacer un `pull request` para que el dueño del repositorio logre ver tus cambios y decida si hace los cambios que tu estás solicitando.
+
+
+Si quieres ver más información de git, github y R studio te dejo un para de ligas con más detalles:
 
 - [Jenny Bryan tutorial](https://happygitwithr.com/)
 - [R chapter](https://r-pkgs.org/git.html)
