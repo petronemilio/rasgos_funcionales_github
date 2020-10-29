@@ -1,0 +1,89 @@
+---
+title: "Exploración de la base"
+author: "Julieta Rosell, Alberto Echeverría, Emilio Petrone, Mark Olson"
+date: "29 de octubre de 2020"
+output: html_document
+---
+
+Durante esta sesión retomaremos nuestro script colaborativo y seguiremos explorando los datos que hemos estado recolectando. Los objetivos de la sesión son: 
+
+* Revisar la presencia de outliers en nuestra base. 
+* Filtrar algunos datos que no nos sirven.
+* Cuantos datos de hojas tenemos. 
+
+
+1.- Abre el proyecto de R que creaste en la sesión del 8 de octubre. 
+2.- Vuelve a bajar los datos de la base compartida en GoogleDocs para poder abrirlos en Excel. Guárdalos con la extensión .csv directamente pues usaremos read.csv. No olvides reemplazar la base recién descargada por la versión anterior.
+3.- Corre los comandos del script pasado. 
+
+*Lo primero que hay que hacer es cargar la base de datos.
+
+```{r, echo=TRUE}
+datos2 <- read.csv("../data/2020_10_08_Base.csv")
+```
+
+4.- Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
+```{r echo=FALSE}
+class(datos2)
+str(datos2)
+names(datos2)
+datos <- datos2[,c(1:7,11:21)]
+names(datos)
+```
+Los nombres de las variables se ven bien, sin embargo aún hay un problema con unas de ellas. ¿Cuál es el problema?
+```{r, echo=TRUE}
+names(datos) <- c("order", "family", "genus", "species.epithet", "stem.length.m", "VD.base.um", "VDtip.um", "min.long.hoja", "max.long.hoja", "min.long.peciolo", "max.long.peciolo", "min.long.lamina", "max.long.lamina", "min.ancho.hoja", "max.ancho.hoja", "tipo.hoja", "Long.hoja..cm.", "Ancho.hoja..cm.")
+```
+
+5. Pide de nuevo a R que te muestre la estructura de nuestros datos. ¿Qué notamos como problemas?
+```{r, echo=TRUE}
+str(datos)
+#Ya se ven más limpios los datos! 
+```
+6.Solicita a R que te devuelva la media y la mediana de todos los datos continuos y una tabla de frecuencias para los datos categóricos. ¿Conoces algún comando que te devuelva el resumen de las estadísticas descriptivas de la base?
+
+```{r, echo=TRUE}
+mean(datos$max.long.hoja, na.rm=TRUE)
+median(datos$max.long.hoja, na.rm=TRUE)
+table(datos$tipo.hoja)
+summary(datos)
+```
+7.Genera una nueva vabiable que incluya el nombre binomial de la especie separando género y epíteto con un guión bajo.
+```{r, echo=TRUE}
+datos$species <- paste(datos$genus,"_",datos$species.epithet)
+```
+
+8.Genera un histograma para las variables continuas.¿Cómo es la distribución de los datos? ¿Qué transformación aplicarías para este tipo de distribución para lograr una distribución al menos más simétrica?
+```{r, echo=TRUE}
+hist(datos$VD.base.um)
+hist(datos$VDtip.um)
+```
+
+* Filtrar especies que no tienen hojas y las especies no determinadas. ¿Cuántas especies quedan?
+```{r echo=FALSE}
+datos.sinhojas <- datos[(datos2$Datos.crudos.sobre.hojas != "No tienen hojas") & (datos2$Datos.crudos.sobre.hojas != "DESCARTADA"),]
+```
+
+5.- Haz una gráfica de caja y bigotes con la longitud de las hojas ¿Cómo se ven los datos? ¿Qué otra gráfica exploratoria nos podría ayudar a detectar outliers?
+```{r, echo=TRUE}
+boxplot(datos.sinhojas$Long.hoja..cm.)
+boxplot(log10(datos.sinhojas$Long.hoja..cm.))
+```
+
+
+6. Detecta las especies que tienen la menor y la mayor longitud de hoja.
+```{r, echo=TRUE}
+datos.sinhojas[order(-datos.sinhojas$Long.hoja..cm.),][1:3,]
+datos.sinhojas[order(datos.sinhojas$Long.hoja..cm.),][1:3,]
+```
+
+7. Haz un histograma de la longitud de la hoja. ¿Qué distribución tienen? ¿Es necesario hacer una transformación de los datos? ¿Cómo la harías?
+```{r, echo=TRUE}
+hist(datos.sinhojas$Long.hoja..cm.)
+```
+
+8.- Tenemos problemas porque tenemos tres formas en las que tenemos codificada la longitud de hoja. Una es en la variable “long.hoja”, la otra es el promedio de “mínimo longitud total de la hoja” y “máximo longitud total de la hoja”, y otra es la suma de “longiutd de la lámina” y “longitud del peciolo” ¿cómo vamos a resolver este problema?
+9.- Crea una columna en la que obtengas el promedio de la longitud máxima y mínima de la hoja y otra en la que obtengas la suma del promedio de la longitud máxima y mínima del pecíolo y el promedio de la longitud máxima y mínima de la lámina.
+10- ¿Cuántas especies tienen los tres tipos de fuentes de datos?, ¿cuántas tienen sólo dos? y ¿cuántas sólo una?
+11.- ¿Qué tanto difieren entre sí los diferentes tipos de datos?
+12- Repite los pasos  a 11 con el ancho de la hoja.

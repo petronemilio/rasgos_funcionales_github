@@ -18,11 +18,8 @@ Durante esta sesión comenzaremos a trabajar los datos que hemos estado colectan
 
 3.Después de entender la estructura general de la base que abriste en Excel, importa los datos a R.
 ```{r, echo=TRUE}
-<<<<<<< HEAD
-datos2 <- read.csv("../Data/2020_10_08_Base.csv")
-=======
-datos2 <- read.csv("2020_10_08_Base.csv")
->>>>>>> ce7d2374a30b276dcf5deb516eab998d7261aa8e
+datos2 <- read.csv("../data/2020_10_08_Base.csv")
+#datos2 <- read.csv("2020_10_08_Base.csv")
 ```
 
 4.Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
