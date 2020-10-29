@@ -13,77 +13,142 @@ Durante esta sesión retomaremos nuestro script colaborativo y seguiremos explor
 
 
 1.- Abre el proyecto de R que creaste en la sesión del 8 de octubre. 
+
 2.- Vuelve a bajar los datos de la base compartida en GoogleDocs para poder abrirlos en Excel. Guárdalos con la extensión .csv directamente pues usaremos read.csv. No olvides reemplazar la base recién descargada por la versión anterior.
-3.- Corre los comandos del script pasado. 
 
-*Lo primero que hay que hacer es cargar la base de datos.
+3.- Corre algunos de los comandos del script pasado. 
 
-```{r, echo=TRUE}
+* Lo primero que hay que hacer es cargar la base de datos.
+
+```{r include=FALSE}
 datos2 <- read.csv("../data/2020_10_08_Base.csv")
 ```
 
-4.- Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
-```{r echo=FALSE}
+* Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
+
+
+```{r include=FALSE}
 class(datos2)
 str(datos2)
 names(datos2)
 datos <- datos2[,c(1:7,11:21)]
 names(datos)
 ```
+
 Los nombres de las variables se ven bien, sin embargo aún hay un problema con unas de ellas. ¿Cuál es el problema?
-```{r, echo=TRUE}
-names(datos) <- c("order", "family", "genus", "species.epithet", "stem.length.m", "VD.base.um", "VDtip.um", "min.long.hoja", "max.long.hoja", "min.long.peciolo", "max.long.peciolo", "min.long.lamina", "max.long.lamina", "min.ancho.hoja", "max.ancho.hoja", "tipo.hoja", "Long.hoja..cm.", "Ancho.hoja..cm.")
+
+```{r include=FALSE}
+names(datos) <- c("order", "family", "genus", "species.epithet", "stem.length.m", "VD.base.um", "VDtip.um", "min.long.hoja", "max.long.hoja", "min.long.peciolo", "max.long.peciolo", "min.long.lamina", "max.long.lamina", "min.ancho.hoja", "max.ancho.hoja", "tipo.hoja", "long.hoja.cm.", "ancho.hoja.cm.")
 ```
 
-5. Pide de nuevo a R que te muestre la estructura de nuestros datos. ¿Qué notamos como problemas?
-```{r, echo=TRUE}
+
+4.- Pide de nuevo a R que te muestre la estructura de nuestros datos. ¿Qué notamos como problemas?
+
+```{r include=FALSE}
 str(datos)
 #Ya se ven más limpios los datos! 
 ```
-6.Solicita a R que te devuelva la media y la mediana de todos los datos continuos y una tabla de frecuencias para los datos categóricos. ¿Conoces algún comando que te devuelva el resumen de las estadísticas descriptivas de la base?
 
-```{r, echo=TRUE}
+5.- Solicita a R que te devuelva la media y la mediana de todos los datos continuos y una tabla de frecuencias para los datos categóricos. ¿Conoces algún comando que te devuelva el resumen de las estadísticas descriptivas de la base?
+
+```{r include=FALSE}
 mean(datos$max.long.hoja, na.rm=TRUE)
 median(datos$max.long.hoja, na.rm=TRUE)
 table(datos$tipo.hoja)
 summary(datos)
 ```
-7.Genera una nueva vabiable que incluya el nombre binomial de la especie separando género y epíteto con un guión bajo.
-```{r, echo=TRUE}
+
+6.- Genera una nueva vabiable que incluya el nombre binomial de la especie separando género y epíteto con un guión bajo.
+
+```{r include=FALSE}
 datos$species <- paste(datos$genus,"_",datos$species.epithet)
 ```
 
-8.Genera un histograma para las variables continuas.¿Cómo es la distribución de los datos? ¿Qué transformación aplicarías para este tipo de distribución para lograr una distribución al menos más simétrica?
-```{r, echo=TRUE}
+
+7.- Genera un histograma para las variables de diámetro de vasos.¿Cómo es la distribución de los datos? ¿Qué transformación aplicarías para este tipo de distribución para lograr una distribución al menos más simétrica?
+
+```{r include=FALSE}
+#Diámetro de vasos en la base y en la punta
 hist(datos$VD.base.um)
 hist(datos$VDtip.um)
 ```
 
-* Filtrar especies que no tienen hojas y las especies no determinadas. ¿Cuántas especies quedan?
-```{r echo=FALSE}
+8.- Filtrar especies que no tienen hojas y las especies no determinadas. ¿Cuántas especies quedan?
+
+```{r include=FALSE}
 datos.sinhojas <- datos[(datos2$Datos.crudos.sobre.hojas != "No tienen hojas") & (datos2$Datos.crudos.sobre.hojas != "DESCARTADA"),]
 ```
 
-5.- Haz una gráfica de caja y bigotes con la longitud de las hojas ¿Cómo se ven los datos? ¿Qué otra gráfica exploratoria nos podría ayudar a detectar outliers?
-```{r, echo=TRUE}
-boxplot(datos.sinhojas$Long.hoja..cm.)
-boxplot(log10(datos.sinhojas$Long.hoja..cm.))
+9.- Haz una gráfica de caja y bigotes con la longitud de las hojas ¿Cómo se ven los datos? ¿Qué otra gráfica exploratoria nos podría ayudar a detectar outliers?
+
+```{r include=FALSE}
+boxplot(datos.sinhojas$long.hoja.cm.)
+boxplot(log10(datos.sinhojas$long.hoja.cm.))
 ```
 
 
-6. Detecta las especies que tienen la menor y la mayor longitud de hoja.
-```{r, echo=TRUE}
-datos.sinhojas[order(-datos.sinhojas$Long.hoja..cm.),][1:3,]
-datos.sinhojas[order(datos.sinhojas$Long.hoja..cm.),][1:3,]
+10.- Detecta las especies que tienen la menor y la mayor longitud de hoja.
+
+```{r include=FALSE}
+datos.sinhojas[order(-datos.sinhojas$long.hoja.cm.),][1:3,]
+datos.sinhojas[order(datos.sinhojas$long.hoja.cm.),][1:3,]
 ```
 
-7. Haz un histograma de la longitud de la hoja. ¿Qué distribución tienen? ¿Es necesario hacer una transformación de los datos? ¿Cómo la harías?
-```{r, echo=TRUE}
-hist(datos.sinhojas$Long.hoja..cm.)
+11.- Haz un histograma de la longitud de la hoja. ¿Qué distribución tiene? ¿Es necesario hacer una transformación de los datos? ¿Cómo la harías?
+
+```{r include=FALSE}
+hist(datos.sinhojas$long.hoja.cm.)
+#Transformación logarítmica
+hist(log10(datos.sinhojas$long.hoja.cm.))
 ```
 
-8.- Tenemos problemas porque tenemos tres formas en las que tenemos codificada la longitud de hoja. Una es en la variable “long.hoja”, la otra es el promedio de “mínimo longitud total de la hoja” y “máximo longitud total de la hoja”, y otra es la suma de “longiutd de la lámina” y “longitud del peciolo” ¿cómo vamos a resolver este problema?
-9.- Crea una columna en la que obtengas el promedio de la longitud máxima y mínima de la hoja y otra en la que obtengas la suma del promedio de la longitud máxima y mínima del pecíolo y el promedio de la longitud máxima y mínima de la lámina.
-10- ¿Cuántas especies tienen los tres tipos de fuentes de datos?, ¿cuántas tienen sólo dos? y ¿cuántas sólo una?
+Tenemos problemas porque hay tres formas en las que capturamos la longitud de hoja. Una es en la variable “long.hoja.cm”, la otra es el promedio de “min.long.hoja” y “max.long.hoja" y otra es la suma del promedio (“min.long.lam” y "max.long.lam") más el promedio de (“min.long.peciolo” y max.long.peciolo") ¿cómo vamos a resolver este problema?
+
+12.- Crea una columna en la que obtengas el promedio de la longitud máxima y mínima de la hoja y otra en la que obtengas la suma del promedio de la longitud máxima y mínima del pecíolo y el promedio de la longitud máxima y mínima de la lámina.
+
+```{r include=FALSE}
+#Crear columna con promedios de mínimos y máximos de longitud de la hoja 
+datos.sinhojas$min.max.prom <- (datos.sinhojas$min.long.hoja + datos.sinhojas$max.long.hoja)/2
+#Crear columna con promedios de láminas y de peciólos 
+datos.sinhojas$peciolo.prom.lam.prom <- (((datos.sinhojas$min.long.peciolo + datos.sinhojas$max.long.peciolo)/2) + ((datos.sinhojas$min.long.lamina + datos.sinhojas$max.long.lamina)/2))
+```
+
+13.- ¿Cuántas especies tienen los tres tipos de fuentes de datos?, ¿cuántas tienen sólo dos? y ¿cuántas sólo una?
+
+```{r include=FALSE}
+#make mini dataframe just with long leaf info
+datos.long <- datos.sinhojas[,c(17,20,21)]
+
+#Check how many values we have for each variable
+sum(complete.cases(datos.long$peciolo.prom.lam.prom)) #363
+sum(complete.cases(datos.long$min.max.prom)) #358
+sum(complete.cases(datos.long$long.hoja.cm.)) #234
+sum(complete.cases(datos.long)) #How many sp have the three values: 61
+#Chcek how many species have one of the three values
+sum(complete.cases(datos.long))
+sum(rowSums(!is.na(datos.long))>0) #564 tienen al menos un datos de longitud de hoja. 
+
+```
+
 11.- ¿Qué tanto difieren entre sí los diferentes tipos de datos?
-12- Repite los pasos  a 11 con el ancho de la hoja.
+
+```{r include=FALSE}
+datos.long.almenosuno <- datos.long[rowSums(!is.na(datos.long)) > 0 ,]
+
+datos.long.almenosuno$dif1 <- datos.long.almenosuno$long.hoja.cm. - datos.long.almenosuno$min.max.prom
+
+datos.long.almenosuno$dif2 <- datos.long.almenosuno$long.hoja.cm. - datos.long.almenosuno$peciolo.prom.lam.prom
+
+datos.long.almenosuno$dif3 <-datos.long.almenosuno$min.max.prom - datos.long.almenosuno$peciolo.prom.lam.prom
+
+#long.hoja.matrix.dif <- as.matrix(datos.long.almenosuno[,c(4:6)])
+library(gplots)
+library(dplyr)
+#x <- long.hoja.matrix.dif %>% replace(is.na(.), 0)
+#heatmap.2(x)
+
+
+```
+
+
+12- Repite los pasos 9 a 11 con el ancho de la hoja.
