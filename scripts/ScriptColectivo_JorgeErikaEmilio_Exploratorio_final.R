@@ -11,9 +11,13 @@ rm(list = ls())
 #Set working directory#
 
 getwd()
-setwd("C:/Users/diem_/Documents/R/MisProyectos/Manuscrito-colectivo-Vasos&TamañoDeHoja/Data")
-
-traits.db <- read.csv("BaseRasgos.csv")
+#setwd("C:/Users/diem_/Documents/R/MisProyectos/Manuscrito-colectivo-Vasos&TamañoDeHoja/Data")
+#¿Cómo solucionar el problema de las rutas relativas?
+#Falta homogeneizar el nombre de la base
+#####
+#Comentar mejor la sección de cargado de la base y cambio de nombre de las comlumnas
+traits.db <- read.csv("data/2020_10_08_Base.csv")
+#traits.db <- read.csv("BaseRasgos.csv")
 
 head(traits.db)
 names(traits.db)
@@ -50,6 +54,8 @@ str(traits.db)
 summary(traits.db$stem.length.m)
 mean(traits.db$stem.length.m, na.rm = TRUE)
 
+#####
+#Está es otra posible sección y se le podría poner algo para saber que pasa aquí.
 #Crear columna "species"
 traits.db$species <- paste(traits.db$genus, traits.db$species.epithet, sep = "_")
 names(traits.db)
@@ -79,7 +85,7 @@ names(data2)
 long.hoja.crud <- subset(data2, select=c("species", "long.hoja"))
 long.hoja.crud <-na.omit(long.hoja.crud)
 head(long.hoja.crud)
-
+#No me queda claro porque se reduce tanto el set 
 ###*Respuesta 1.1: 222 datos disponibles.
 
 ###Pregunta 1.2): ¿Cuántos datos tenemos de la longitud de hoja provenientes del 

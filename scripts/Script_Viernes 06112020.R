@@ -9,9 +9,10 @@
 # número de datos.
 
 #### Cargar y manipular datos ####
-
-traits <- read.csv("traits_29102020.csv",     # Base de datos hasta el 
+#Bien anotado!!
+#traits <- read.csv("traits_29102020.csv",     # Base de datos hasta el 
                    header = TRUE, sep = ",")  #29 de octubre.
+traits <- read.csv("data/2020_10_08_Base.csv", header = TRUE,sep=",")
 
 data <- traits[,c(1:7,11:21)] # Eliminar columnas que no servirán
 colnames(data) <- c("order","family","genus","species.epithet",
@@ -32,7 +33,7 @@ data2 <- subset(data, leaf.type == "compound"|
                                        # que no presentan tipo de hoja. 
                                        # Checar que ninguna de las especies sin tipo de hoja
                                        # presenten datos de medidas de hojas
-#### Quedan 583 especies 
+#### Quedan 583 especies ###A mi me salen 577
 
 #### Ejercicios en clases #####
 
@@ -55,7 +56,7 @@ data2[order(data2$length.leaf.cm),][1,] # Nos da los valores menores
 
 library(reshape)
 
-x <- cast(data2, Species ~ ., fun.aggregate = length, 
+x <- cast(data2, Species ~ ., fun.aggregate = length,  #Aquí faltó poner algo?
           value = "length.leaf.cm")
 
 # Opción 3. Utilizar función aggregate
@@ -77,13 +78,13 @@ data2["long.lam.pet.mean"]<-((data2[12]+data2[13])/2)+((data2[10]+data2[11])/2) 
 # ¿Cuántos datos tenemos de longitud de hoja provenientes del promedio del
 # mínimo y máximo de la longitud total de la hoja?
 
-length(na.omit(data2$long.hoja.mean)) # 358 datos
+length(na.omit(data2$long.hoja.mean)) # 358 datos  #326 CON BASE DEL 8/11/20
 
 # ¿Cuántos datos de longitud de hoja tenemos provenientes de 
 # la suma del promedio de la longitud máxima y mínima de la lámina
 # y del promedio de la longitud máxima y mínima del peciolo?
 
-length(na.omit(data2$long.lam.pet.mean)) # 363 datos
+length(na.omit(data2$long.lam.pet.mean)) # 363 datos #354 CON BASE DEL 8/11/20
 
 # ¿Cuántas especies comparten ambas fuentes de datos?
 
@@ -105,6 +106,10 @@ table(data2$fuentes.distintas) # 194 tienen ambas
 
 length(na.omit(data2$long.hoja.mean))-194 # 164 tienen sólo la primera
 length(na.omit(data2$long.lam.pet.mean))-194 # 169 sólo la segunda
+
+#Buena solución. Para no depender del valor 194 en caso de que la base de datos cambie
+# podrían hacer un rowSums(is.na(data2$variable de interés)) y seleccionar las que suman 
+# 1.
 
 #### Ejercicio 2 ####
 
@@ -133,7 +138,8 @@ length(na.omit(data2$ancho.hoja))
 data2["unovsdos"]<- (data2[20])-(data2[21]) # Diferencia entre la primera y segunda variable
 data2["dosvstres"]<- (data2[21])-(data2[22]) # Diferencia entre la segunda y la tercera variable
 data2["unovstres"]<- (data2[20])-(data2[22]) # Dfierencia entre la primera y la tercera variable
-
+#No olviden cambiar par para disponer las gráficas de forma std.
+par(mfrow = c(1,1))
 plot(data2$unovsdos)
 text(x = (1:583), y = data2$unovsdos, labels = data2$Species)
 #### Angophora costata difiere por ca. 50 cm, pero parece
@@ -209,3 +215,6 @@ text(data2$ancho.hoja, log(data2$long.lam.pet.mean),
 #### Ejercicio 7 ####
 # ver: 
 # https://docs.google.com/document/d/146ofOVQC01XgLf5-1RJUW2z3YXtsw6bAgNr8eom0zNk/edit?ts=5fa34407
+
+
+#10 + .5 por cargar la base y anotar bien el script

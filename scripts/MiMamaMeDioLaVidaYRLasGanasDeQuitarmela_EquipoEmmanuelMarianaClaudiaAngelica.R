@@ -1,12 +1,16 @@
 # Librerias necesarias (de ser necesario instalar)
 # Para instalar
-install.packages(dplyr)
-install.packages(ggplot)
+install.packages('dplyr')
+install.packages('ggplot2')
 # Para cargar la librerias
 library(dplyr)
 library(ggplot2)
 
+######
+#¿Dónde está la base cargada y los nombres de las columnas?
 # Se crearon 4 columnas nuevas
+data02 <- subset(data, leaf.type == "compound"|
+                  leaf.type=="simple") 
 # Data02 = Base De Datos excluyendo las plantas no determinadas y que no tienen hojas
 data02["long.leaf"]<-data02[17] #Columna copiada de length.leaf.cm
 data02["long.leaf.mean"]<-(data02[8]+data02[9])/2 # Columna de promedio de 
@@ -24,13 +28,13 @@ str(data02)
 #¿Cuantos datos tenemos de longitud de hoja provenientes del promedio 
 #del minimo y maximo de la longitud total de la hoja?
 sum(!is.na(data02$long.leaf.mean))
-## 358 
+## 358 #base326
 
 #¿Cuantos datos de longitud de hoja tenemos provenientes de la suma del promedio de la
 # longitud maxima y minima de la lamina y del promedio de la longitud maxima y minima 
 # del peciolo?
 sum(!is.na(data02$long.lam.pet.mean))
-## 363
+## 363 #354
 
 #¿Cuantas especies comparten ambas fuentes de datos?
 nrow(subset(data02, !is.na(long.leaf.mean) & !is.na(long.lam.pet.mean)))
@@ -38,8 +42,8 @@ nrow(subset(data02, !is.na(long.leaf.mean) & !is.na(long.lam.pet.mean)))
 
 #Pregunta 2
 #¿Cuantas especies tienen un valor unico de longitud de hoja?
-sum(!is.na(data02$long.leaf))
-## 233
+sum(!is.na(data02$long.leaf)) # Más bien hay que sacar las que tengan al menos
+## 233                        # un valor de las diferentes fuentes 
 
 #Pregunta 3
 #¿Cuantas especies tienen informacion sobre el ancho de la hoja?
