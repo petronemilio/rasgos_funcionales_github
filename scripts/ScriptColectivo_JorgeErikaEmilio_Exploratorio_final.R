@@ -16,8 +16,8 @@ getwd()
 #Falta homogeneizar el nombre de la base
 #####
 #Comentar mejor la sección de cargado de la base y cambio de nombre de las comlumnas
-traits.db <- read.csv("data/2020_10_08_Base.csv")
-#traits.db <- read.csv("BaseRasgos.csv")
+#traits.db <- read.csv("data/2020_11_12_Base.csv")
+traits.db <- read.csv("BaseRasgos.csv")
 
 head(traits.db)
 names(traits.db)
@@ -85,7 +85,7 @@ names(data2)
 long.hoja.crud <- subset(data2, select=c("species", "long.hoja"))
 long.hoja.crud <-na.omit(long.hoja.crud)
 head(long.hoja.crud)
-#No me queda claro porque se reduce tanto el set 
+
 ###*Respuesta 1.1: 222 datos disponibles.
 
 ###Pregunta 1.2): ¿Cuántos datos tenemos de la longitud de hoja provenientes del 
@@ -135,6 +135,8 @@ length(merge.all$species)
 
 ###*Respuesta 1.4: En total, las especies que presentan datos para las 3 fuentes son 61.*
 
+#
+calificacion <- 2
 #Pregunta 2:
 #¿Cuántas especies solo tienen un valor único de longitud de hoja?
 
@@ -170,6 +172,8 @@ count(species.single.measurement)
 
 ###*Respuesta 2: R) Hay 221 especies que presentan un valor único de longitud.
 
+#
+calificacion <- calificacion + 1
 #Pregunta 3:
 #¿Cuantas especies tienen información sobre el ancho de hoja?
 #Aclaración: tenemos dos tipos de fuentes para el ancho de hoja. La primera es la variable "directa" o de datos "crudos",
@@ -198,6 +202,9 @@ head(data.width)
 species.single.measurement <- subset(data.width, na_count==1 | na_count==0)
 count(species.single.measurement)
 #*Respuesta 3.3: - En total, hay 543 especies que presentan al menos un dato de ancho de hoja*
+
+#
+calificacion <- calificacion + 1
 
 #estimación cuántitativa de cuánto difieren las longitudes de hoja provenientes de ambas fuentes de datos en la pregunta 1. 
 #Pregunta 4: 4.1) ¿Cuáles son las especies que difieren más entre las dos fuentes de datos? 4.2) ¿Qué tanto difieren?

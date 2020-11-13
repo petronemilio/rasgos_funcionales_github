@@ -12,7 +12,7 @@
 #Bien anotado!!
 #traits <- read.csv("traits_29102020.csv",     # Base de datos hasta el 
                    header = TRUE, sep = ",")  #29 de octubre.
-traits <- read.csv("data/2020_10_08_Base.csv", header = TRUE,sep=",")
+traits <- read.csv("data/2020_11_12_Base.csv", header = TRUE,sep=",")
 
 data <- traits[,c(1:7,11:21)] # Eliminar columnas que no servirán
 colnames(data) <- c("order","family","genus","species.epithet",
@@ -66,7 +66,8 @@ y <- aggregate(data2$length.leaf.cm,
           FUN = sum, na.rm= FALSE)
 
 # Ozothamnus hookeri menor longitud de hoja
-
+#Muy bien anotado!puntos extras por ello
+calificacion <- 0.25
 #### Ejercicios para entregar. Viernes 06/11/2020 ####
 # Se obtuvieron Las siguientes variables 
 
@@ -110,13 +111,15 @@ length(na.omit(data2$long.lam.pet.mean))-194 # 169 sólo la segunda
 #Buena solución. Para no depender del valor 194 en caso de que la base de datos cambie
 # podrían hacer un rowSums(is.na(data2$variable de interés)) y seleccionar las que suman 
 # 1.
-
+calificacion <- calificacion + 2
 #### Ejercicio 2 ####
 
 # ¿ Cuántas especies tienen un valor único de longitud de hoja?
 
 table(data2$fuentes.distintas) # 333 especies tienen sólo un dato
 
+#bien
+calificacion <- calificacion + 1
 #### Pregunta 3 ####
 
 # ¿Cuántas especies tienen información sobre el ancho de la hoja?
@@ -131,6 +134,8 @@ length(na.omit(data2$ancho.hoja))
 # lo que indica que algunos datos deben de estar incompletos. 
 # Se debe de volver a checar la base
 
+#Bien resuelto
+calificacion <- calificacion + 1
 #### Ejercicio 4 ####
 # ¿Cuáles son las especies que difieren más entre las dos fuentes de datos?
 # ¿Qué tanto difieren?
@@ -171,6 +176,8 @@ text(x = (1:583), y = data2$unovstres, labels = data2$Species)
 #### La longitud "per se" de Geissois pruinosa es un promedio
 #### obtenido con varias medidas de herbario. 
 
+#Bien resuelto
+calificacion <- calificacion + 2
 #### Ejercicio 5 ####
 # Gráficos de bigotes y e histogramas
 par(mfrow = c(1,3))
@@ -186,6 +193,8 @@ hist(data2[,22], main = "mean.leaf+pet", breaks = 50)
 # en el bloque anterior, la diferencia entre las fuentes es baja (de unas 15 unidades).
 # Discriminar entre las variables debería de obedecer más al tamaño de la muestra,
 # pero, destacamos la necesidad de vover a revisar la base de datos.
+
+calificacion <- calificacion + 1
 
 #### Ejercicio 6 ####
 # ¿Podemos encontrar hojas aparentemente demasiado anchas para su longitud?
@@ -212,9 +221,15 @@ text(data2$ancho.hoja, log(data2$long.lam.pet.mean),
 # longitud de hoja y lámina son las mismas. La última
 # debería de ser menor y sumarle el pecíolo.
 
+#Bien resuelto
+calificacion <- calificacion + 1
 #### Ejercicio 7 ####
 # ver: 
 # https://docs.google.com/document/d/146ofOVQC01XgLf5-1RJUW2z3YXtsw6bAgNr8eom0zNk/edit?ts=5fa34407
 
-
-#10 + .5 por cargar la base y anotar bien el script
+#buenas propuestass
+calificacion <- calificacion + 2
+#extra por cargar la base
+calificacion <- calificacion + 0.25
+#
+##Calif final 10.5

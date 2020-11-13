@@ -7,10 +7,9 @@ library(dplyr)
 library(ggplot2)
 
 ######
-#¿Dónde está la base cargada y los nombres de las columnas?
 # Se crearon 4 columnas nuevas
-data02 <- subset(data, leaf.type == "compound"|
-                  leaf.type=="simple") 
+data02 <- subset(data, leaf.type == "compound"| #######¿Dónde está la base cargada y 
+                  leaf.type=="simple")          #######los nombres de las columnas?
 # Data02 = Base De Datos excluyendo las plantas no determinadas y que no tienen hojas
 data02["long.leaf"]<-data02[17] #Columna copiada de length.leaf.cm
 data02["long.leaf.mean"]<-(data02[8]+data02[9])/2 # Columna de promedio de 
@@ -20,6 +19,9 @@ data02["long.lam.pet.mean"]<-((data02[12]+data02[13])/2)+((data02[10]+data02[11]
 # de la lamina
 data02["width.leaf.mean"]<-(data02[14]+data02[15])/2 # Promedio del ancho de la hoja
 
+#### No olviden construir scripts que se puedan correr completos. Si yo intento correr este script
+#### no jalaría pues no está la base cargada
+calificacion <- as.numeric(-0.3)
 # Revisamos que las cuatro columnas sean numericas, de haber algun espacio en blanco que
 # no cuente como NA, las columnas serian de tipo "caracter"
 str(data02)
@@ -39,6 +41,7 @@ sum(!is.na(data02$long.lam.pet.mean))
 #¿Cuantas especies comparten ambas fuentes de datos?
 nrow(subset(data02, !is.na(long.leaf.mean) & !is.na(long.lam.pet.mean)))
 ## 194
+calificacion <- calificacion + 2
 
 #Pregunta 2
 #¿Cuantas especies tienen un valor unico de longitud de hoja?
@@ -51,7 +54,7 @@ sum(!is.na(data02$width.leaf.mean)) +
 sum(!is.na(data02$width.leaf.cm)) - nrow(subset(data02, !is.na(width.leaf.mean) &
                                                  !is.na(width.leaf.cm)))
 ## 555
-
+calificacion <- 1 + calificacion
 #Pregunta 4
 #Para las especies con mas de una fuente de datos, obten ahora una estimacion 
 #cuantitativa de cuanto difieren las longitudes de hoja provenientes de ambas 
