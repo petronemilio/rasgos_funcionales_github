@@ -11,7 +11,7 @@
 #### Cargar y manipular datos ####
 #Bien anotado!!
 #traits <- read.csv("traits_29102020.csv",     # Base de datos hasta el 
-                   header = TRUE, sep = ",")  #29 de octubre.
+#                   header = TRUE, sep = ",")  #29 de octubre.
 traits <- read.csv("data/2020_11_12_Base.csv", header = TRUE,sep=",")
 
 data <- traits[,c(1:7,11:21)] # Eliminar columnas que no servirán
@@ -232,4 +232,6 @@ calificacion <- calificacion + 2
 #extra por cargar la base
 calificacion <- calificacion + 0.25
 #
+print("Su calificación es:")
+print(calificacion)
 ##Calif final 10.5

@@ -7,6 +7,12 @@ library(dplyr)
 library(ggplot2)
 
 ######
+#¿Y cómo cargaron la base?
+# Hubiera estado bien empezar desde el principio porque cuándo comparten
+# scripts las otras personas podrían no tener la base cargada.
+#### No olviden construir scripts que se puedan correr completos. Si yo intento correr este script
+#### no jalaría pues no está la base cargada
+
 # Se crearon 4 columnas nuevas
 data02 <- subset(data, leaf.type == "compound"| #######¿Dónde está la base cargada y 
                   leaf.type=="simple")          #######los nombres de las columnas?
@@ -19,9 +25,8 @@ data02["long.lam.pet.mean"]<-((data02[12]+data02[13])/2)+((data02[10]+data02[11]
 # de la lamina
 data02["width.leaf.mean"]<-(data02[14]+data02[15])/2 # Promedio del ancho de la hoja
 
-#### No olviden construir scripts que se puedan correr completos. Si yo intento correr este script
-#### no jalaría pues no está la base cargada
-calificacion <- as.numeric(-0.3)
+
+calificacion <- as.numeric(-0.05)
 # Revisamos que las cuatro columnas sean numericas, de haber algun espacio en blanco que
 # no cuente como NA, las columnas serian de tipo "caracter"
 str(data02)
@@ -45,9 +50,9 @@ calificacion <- calificacion + 2
 
 #Pregunta 2
 #¿Cuantas especies tienen un valor unico de longitud de hoja?
-sum(!is.na(data02$long.leaf)) # Más bien hay que sacar las que tengan al menos
-## 233                        # un valor de las diferentes fuentes 
-
+sum(!is.na(data02$long.leaf)) 
+## 233                         
+calificacion <- calificacion + 1
 #Pregunta 3
 #¿Cuantas especies tienen informacion sobre el ancho de la hoja?
 sum(!is.na(data02$width.leaf.mean)) +
@@ -70,6 +75,8 @@ data02[order(-data02$diff.long),][1:5,c(19,24)] # Las primeras 5 especies
 # 549        Sorbus-aucuparia    10.885
 # 573  Myracrodruon-urundeuva    10.000
 # 575 Schinopsis-brasiliensis     6.500
+
+calificacion <- calificacion + 2
 
 #Pregunta 5
 #Utiliza histogramas y graficos de cajas y bigotes para comparar la distribucion de
@@ -164,6 +171,11 @@ fig1 <- ggplot(data.diff, aes(type, value))+
 fig2 <- ggplot(data.diff, aes(type, log(value)))+
   geom_boxplot()
 
+fig1
+fig2
+
+#Buenas gráficas!
+calificacion <- calificacion + 1.25
 #Pregunta 6
 #Utiliza datos transformados logaritmicamente para comparar el ancho y el largo de
 #las hojas a partir de un grafico de dispersion ("scatterplot"), ¿Podemos encontrar
@@ -205,6 +217,7 @@ ggplot(data03, aes(log(long.measure), log(width.measure),
                    color = long.measure.type, shape = width.measure.type))+
   geom_point()
 
+calificacion <- calificacion + 1
 #Pregunta 7
 # ¿Cual crees que deberiamos escoger como nuestra fuente primaria de datos para 
 # las especies con mas de una fuente de datos? 
@@ -235,3 +248,8 @@ fig2
 
 # En especies donde no se cuente con el intervalo P-L como fuente primaria, la media
 # de la longitud total de la hoja puede ser considerada.
+
+calificacion <- calificacion + 2
+
+print("Su calificación es:")
+print(calificacion)

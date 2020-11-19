@@ -13,11 +13,14 @@ rm(list = ls())
 getwd()
 #setwd("C:/Users/diem_/Documents/R/MisProyectos/Manuscrito-colectivo-Vasos&TamañoDeHoja/Data")
 #¿Cómo solucionar el problema de las rutas relativas?
-#Falta homogeneizar el nombre de la base
+#Si haces el proyecto de R y lo inicias en tu Rstudio no hará falta extablecer la 
+#ruta absoluta a los archivos. Es mejor proceder de esa forma para compartir scripts 
+#con otras personas.
+
 #####
-#Comentar mejor la sección de cargado de la base y cambio de nombre de las comlumnas
-#traits.db <- read.csv("data/2020_11_12_Base.csv")
-traits.db <- read.csv("BaseRasgos.csv")
+#No olviden comentar sus scripts. Así todos entendemos mejor cómo funciona.
+traits.db <- read.csv("data/2020_11_12_Base.csv")
+#traits.db <- read.csv("BaseRasgos.csv")
 
 head(traits.db)
 names(traits.db)
@@ -54,7 +57,7 @@ str(traits.db)
 summary(traits.db$stem.length.m)
 mean(traits.db$stem.length.m, na.rm = TRUE)
 
-#####
+##### 
 #Está es otra posible sección y se le podría poner algo para saber que pasa aquí.
 #Crear columna "species"
 traits.db$species <- paste(traits.db$genus, traits.db$species.epithet, sep = "_")
@@ -134,7 +137,8 @@ count(merge.all)
 length(merge.all$species)
 
 ###*Respuesta 1.4: En total, las especies que presentan datos para las 3 fuentes son 61.*
-
+#Bien resuelto! Que bien que hicieron el merge de las tres fuentes.
+#Hizo falta la combinación de minmax & petiole- pero lo resolvieron bien
 #
 calificacion <- 2
 #Pregunta 2:
@@ -170,10 +174,13 @@ head(species.single.measurement)
 tail(species.single.measurement)
 count(species.single.measurement)
 
+#####
 ###*Respuesta 2: R) Hay 221 especies que presentan un valor único de longitud.
 
-#
-calificacion <- calificacion + 1
+#Su solución da muchos detalles de las especies y sus distitnas fuentes de información.
+#Se merecen unas décimas extras.
+calificacion <- calificacion + 1.25
+
 #Pregunta 3:
 #¿Cuantas especies tienen información sobre el ancho de hoja?
 #Aclaración: tenemos dos tipos de fuentes para el ancho de hoja. La primera es la variable "directa" o de datos "crudos",
@@ -203,7 +210,7 @@ species.single.measurement <- subset(data.width, na_count==1 | na_count==0)
 count(species.single.measurement)
 #*Respuesta 3.3: - En total, hay 543 especies que presentan al menos un dato de ancho de hoja*
 
-#
+#Bien!
 calificacion <- calificacion + 1
 
 #estimación cuántitativa de cuánto difieren las longitudes de hoja provenientes de ambas fuentes de datos en la pregunta 1. 
@@ -309,6 +316,12 @@ ggplot(data2, aes(x=log10(long.hoja), y=log10(long.lam.pet.mean))) +
   geom_point(size=2, shape=10) +  geom_label(label=data2$species, size=2.5) +
   geom_smooth(method="lm", se=TRUE, fullrange=FALSE, level=0.95)                                           
 
+#Hiceron buenas propuestas para detectar diferencias de valores de longitudes de hoja
+# entre fuentes. Buenas gráficas!
+#Preguinta 4
+calificacion <- calificacion + 2
+#Pregunta 5
+calificacion <- calificacion + 1.25
 
 ### Pregunta 6: ¿Podemos encontrar hojas aparentemente demasiado anchas para su longitud?
 ### Para responder esta pregunta, utilizamos gráficas de tipo scatterplot, que se muestran a continuación:
@@ -335,6 +348,7 @@ ggplot(data2, aes(x=log10(long.lam.pet.mean), y=log10(width.leaf.cm))) +
 ## *Respuesta 6: A partir de nuestras observaciones no encontramos especies que tuvieran hojas demasiado anchas para su longitud, pero sí
 ####             el caso contrario, especies que presentan hojas atípicamente largas para su valor de ancho. Un ejemplo es:
 ####             Pandanus tectorius
+calificacion <- calificacion + 1
 
 ### Pregunta 7: ¿Cuál crees que deberíamos escoger como nuestra fuente primaria 
 #de datos para las especies con más de una fuente de datos? 
@@ -343,3 +357,7 @@ ggplot(data2, aes(x=log10(long.lam.pet.mean), y=log10(width.leaf.cm))) +
 ## Los datos de longitud que más se parecen entre sí son los calculados a partir de la suma de la lámina y peciolo y los obtenidos
 # a partir del cálculo de la media de longitud a partir de mínimos y máximos. Sugeriríamos utilizar ambas fuentes para completar 
 #el mayor número de datos posible, ya que estas no difieren significativamente entre sí (después de haber pulido nuevamente la base).
+calificacion <- calificacion + 2
+#
+print("Su calificación es:")
+print(calificacion)

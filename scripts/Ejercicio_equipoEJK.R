@@ -3,8 +3,8 @@ library(dplyr)
 library(car)
 library(ggplot2)
 
-traits<- read.csv("2020_10_29_Base.csv") #cargar base de datos#
-#traits<- read.csv("data/2020_11_12_Base.csv") #cargar base de datos#
+#traits<- read.csv("2020_10_29_Base.csv") #cargar base de datos#
+traits<- read.csv("data/2020_11_12_Base.csv") #cargar base de datos#
 
 names(traits) #revisar nombres#
 
@@ -30,7 +30,7 @@ data2["species"] <- paste(data2$genus,
                           sep = "_") 
 
 ####Bien cargada la base y los cambios de nombre en las columnas
-calificacion <- 0.3
+calificacion <- 0.25
 #Creamos nuevas columnas para los promedios de peciolo, 
 #lamina, hoja y la suma de esos promedios para la hoja completa
 data3 <- data2 %>% 
@@ -79,8 +79,10 @@ calificacion <- 2 + calificacion
 data.lenght <- data2$length.leaf.cm[!is.na(data2$length.leaf.cm)]
 length(data.lenght) 
 #filtrar datos por longitud total de la hoja quedan 233 de 583#
-#había que sacar las especies que hasta el momento tienen una sola fuente
-calificacion <- 0 + calificacion
+
+#había que sacar las especies que hasta el momento tienen una sola fuente de info.
+#
+calificacion <- 1 + calificacion
 ### 3. ?Cuantas especies tienen informacion sobre el ancho de la hoja?
 
 width.leaf <- select(data3, species, width.leaf.cm)
@@ -154,8 +156,9 @@ boxplot(log10(merge.lenghtleaf.lampetmean$mean.length.leaf),
 
 plot(merge.lenghtleaf.lampetmean$mean.length.leaf, 
      merge.lenghtleaf.lampetmean$length.leaf.union)
+par(mfrow=c(1,1), dev.off)
 #Después de utilizar la función par no olvides regresar al display original
-calificacion <- calificacion + 0.8
+calificacion <- calificacion + 0.95
 # 6. Utiliza datos transformados logaritmicamente para 
 #comparar el ancho y el largo de las hojas a partir de un 
 #grafico de dispersion (“scatterplot”), 
@@ -170,10 +173,12 @@ ggplot(data3, aes(x=(log10(width.leaf.cm)),
   geom_point(size=1)+stat_smooth(formula= y~x, method = "lm")+
   geom_text(position = "identity", angle=25, size=2.5, alpha=0.8)
 
-calificacion <- calificacion + 1
+calificacion <- calificacion + 1.05
 
 #Con respecto a la pregunta 7 proponen una solución, sin embargo no consideran
 #tomar el mayor número de fuentes en caso de que solo se tenga una fuente para 
 #una especie. 
-calificacion <- calificacion + 1.7
-#Calificación tentativa 8.8
+calificacion <- calificacion + 2
+#Calificación 
+print("Su calificación es:")
+print(calificacion)

@@ -23,7 +23,7 @@ Durante esta sesión retomaremos nuestro script colaborativo y seguiremos explor
 * Lo primero que hay que hacer es cargar la base de datos.
 
 ```{r include=FALSE}
-traits <- read.csv("../data/2020_10_08_Base.csv")
+traits <- read.csv("../data/2020_11_17_Base.csv")
 ```
 
 * Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
@@ -201,3 +201,40 @@ lm.fit(datos.long.almenosuno$long.hoja.cm. ~ datos.long.almenosuno$min.max.prom)
 
 
 12- Repite los pasos 9 a 11 con el ancho de la hoja.
+
+
+13.- Hacer un modelo lineal de longitud de la planta vs diámetro de los conductos en la base.
+```{r include=FALSE}
+
+vdtip.stl.lm <- lm(log10(data$VD.tip.um.) ~ log10(data$stem.length.m))
+summary(vdtip.stl.lm)
+vdtip.stl.lm
+
+vdbase.stl.lm <- lm(log10(data3$VD.base.um) ~ log10(data3$stem.length.m))
+summary(vdbase.stl.lm)
+vdtip.stl.lm
+plot(vdtip.stl.lm)
+
+plot(log10(data3$stem.length.m),log10(data3$mean.length.leaf))
+plot(log10(data3$stem.length.m),log10(data3$VD.base.um))
+plot(log10(data3$VD.base.um),log10(data3$mean.length.leaf))
+plot(log10(data3$VD.tip.um.),log10(data3$mean.length.leaf))
+
+vdbase.stlandleaf.lm <- lm(log10(data3$VD.base.um) ~ log10(data3$stem.length.m)*log10(data3$length.leaf.union))
+summary(vdbase.stlandleaf.lm)
+
+
+meanlengthleaf.vdbase.lm <- lm(log10(data3$mean.length.leaf)~ log10(data3$VD.base.um))
+summary(meanlengthleaf.vdbase.lm)
+
+meanlengthleaf.vdtip.lm <- lm(log10(data3$mean.length.leaf)~ log10(data3$VD.tip.um.))
+summary(meanlengthleaf.vdtip.lm)
+
+meanlengthunion.vdtip.lm <- lm(log10(data3$length.leaf.union)~ log10(data3$VD.tip.um.))
+summary(meanlengthunion.vdtip.lm)
+plot(log10(data3$VD.tip.um.),log10(data3$length.leaf.union))
+plot(log10(data3$stem.length.m),log10(data3$VD.base.um))
+
+meanlengthunion.vdtip.lm <- lm(log10(data3$VD.tip.um.) ~ 
+                                 log10(data3$stem.length.m)* log10(data3$stem.length.m) )
+```
