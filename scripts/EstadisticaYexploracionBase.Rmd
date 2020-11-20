@@ -1,0 +1,240 @@
+---
+title: "Exploración de la base"
+author: "Julieta Rosell, Alberto Echeverría, Emilio Petrone, Mark Olson"
+date: "29 de octubre de 2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Durante esta sesión retomaremos nuestro script colaborativo y seguiremos explorando los datos que hemos estado recolectando. Los objetivos de la sesión son: 
+
+* Revisar la presencia de outliers en nuestra base. 
+* Filtrar algunos datos que no nos sirven.
+* Cuantos datos de hojas tenemos. 
+
+
+1.- Abre el proyecto de R que creaste en la sesión del 8 de octubre. 
+
+2.- Vuelve a bajar los datos de la base compartida en GoogleDocs para poder abrirlos en Excel. Guárdalos con la extensión .csv directamente pues usaremos read.csv. No olvides reemplazar la base recién descargada por la versión anterior.
+
+3.- Corre algunos de los comandos del script pasado. 
+
+* Lo primero que hay que hacer es cargar la base de datos.
+
+```{r include=FALSE}
+traits <- read.csv("../data/2020_11_17_Base.csv")
+```
+
+* Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
+
+
+```{r include=FALSE}
+class(traits)
+str(traits)
+names(traits)
+data <- traits[,c(1:7,11:21)]
+names(data)
+```
+
+Los nombres de las variables se ven bien, sin embargo aún hay un problema con unas de ellas. ¿Cuál es el problema?
+
+```{r include=FALSE}
+colnames(data) <- c("order","family","genus","species.epithet",
+                    "stem.length.m", "VD.base.um","VD.tip.um.",
+                    "min.length.leaf.cm","max.length.leaf.cm",
+                    "min.length.petiole.cm", "max.length.petiole.cm",
+                    "min.length.blade.cm","max.length.blade.cm",
+                    "min.width.blade.cm","max.width.blade.cm",
+                    "leaf.type","length.leaf.cm","width.leaf.cm")
+```
+
+
+4.- Pide de nuevo a R que te muestre la estructura de nuestros datos. ¿Qué notamos como problemas?
+
+```{r include=FALSE}
+str(data)
+#Ya se ven más limpios los datos! 
+```
+
+5.- Solicita a R que te devuelva la media y la mediana de todos los datos continuos y una tabla de frecuencias para los datos categóricos. ¿Conoces algún comando que te devuelva el resumen de las estadísticas descriptivas de la base?
+
+```{r include=FALSE}
+mean(data$max.length.leaf.cm, na.rm=TRUE)
+median(data$max.length.leaf.cm, na.rm=TRUE)
+table(data$leaf.type)
+summary(data)
+```
+
+6.- Genera una nueva vabiable que incluya el nombre binomial de la especie separando género y epíteto con un guión bajo.
+
+```{r include=FALSE}
+data$species <- paste(data$genus,"_",data$species.epithet)
+```
+
+
+7.- Genera un histograma para las variables de diámetro de vasos.¿Cómo es la distribución de los datos? ¿Qué transformación aplicarías para este tipo de distribución para lograr una distribución al menos más simétrica?
+
+```{r include=FALSE}
+#Diámetro de vasos en la base y en la punta
+hist(data$VD.base.um)
+hist(data$VD.tip.um.)
+```
+
+8.- Filtrar especies que no tienen hojas y las especies no determinadas. ¿Cuántas especies quedan?
+
+```{r include=FALSE}
+data2 <- subset(data, leaf.type == "compound"|
+                  leaf.type=="simple")
+data2.1 <- data[(traits$Datos.crudos.sobre.hojas != "No tienen hojas") &
+                  (traits$Datos.crudos.sobre.hojas != "DESCARTADA"),] 
+```
+
+9.- Haz una gráfica de caja y bigotes con la longitud de las hojas ¿Cómo se ven los datos? ¿Qué otra gráfica exploratoria nos podría ayudar a detectar outliers?
+
+```{r include=FALSE}
+par(mfrow = c(2,3))
+boxplot(data2$length.leaf.cm, main = "longitud de hoja")
+dotchart(data2$length.leaf.cm)
+hist(data2$length.leaf.cm)
+#
+boxplot(log(data2$length.leaf.cm), main = "log(longitud de hoja)")
+dotchart(log(data2$length.leaf.cm))
+hist(log(data2$length.leaf.cm))
+
+```
+
+
+10.- Detecta las especies que tienen la menor y la mayor longitud de hoja.
+
+```{r include=FALSE}
+data2[order(-data2$length.leaf.cm),][1,]
+data2[order(data2$length.leaf.cm),][1,]
+```
+
+11.- Haz un histograma de la longitud de la hoja. ¿Qué distribución tiene? ¿Es necesario hacer una transformación de los datos? ¿Cómo la harías?
+
+```{r include=FALSE}
+
+```
+
+Tenemos problemas porque hay tres formas en las que capturamos la longitud de hoja. Una es en la variable “long.hoja.cm”, la otra es el promedio de “min.long.hoja” y “max.long.hoja" y otra es la suma del promedio (“min.long.lam” y "max.long.lam") más el promedio de (“min.long.peciolo” y max.long.peciolo") ¿cómo vamos a resolver este problema?
+
+12.- Crea una columna en la que obtengas el promedio de la longitud máxima y mínima de la hoja y otra en la que obtengas la suma del promedio de la longitud máxima y mínima del pecíolo y el promedio de la longitud máxima y mínima de la lámina.
+
+```{r include=FALSE}
+#Crear columna con promedios de mínimos y máximos de longitud de la hoja 
+library(dplyr)
+#
+#datos.sinhojas$min.max.prom <- (datos.sinhojas$min.long.hoja + datos.sinhojas$max.long.hoja)/2
+#Crear columna con promedios de láminas y de peciólos 
+#datos.sinhojas$peciolo.prom.lam.prom <- (((datos.sinhojas$min.long.peciolo + #datos.sinhojas$max.long.peciolo)/2) + ((datos.sinhojas$min.long.lamina + #datos.sinhojas$max.long.lamina)/2))
+
+# Crear una nueva base de datos con las nuevas columnas
+data3 <- data2 %>% 
+  # El comando "%>%" es un comando especial de la paqueteria dplyr que se supone significa
+  # seccion dentro de seccion
+  mutate(mean.petiole = (min.length.petiole.cm + max.length.petiole.cm)/2,
+         mean.length.blade = (min.length.blade.cm + max.length.blade.cm)/2,
+         mean.length.leaf = (min.length.leaf.cm + max.length.leaf.cm)/2) %>%
+  # mutate es una funcion que permite crear nuevas columnas con base en otras. 
+  # En esta primera funcion se crearon 3. 
+  mutate(length.leaf.union = mean.petiole + mean.length.blade)
+  # Debido a que se requiere formar primeramente las columnas mean.petiole y mean.length.blade, 
+  # la columna length.leaf.union se debe hacer en una columna aparte. 
+
+str(data3)
+```
+
+13.- ¿Cuántas especies tienen los tres tipos de fuentes de datos?, ¿cuántas tienen sólo dos? y ¿cuántas sólo una?
+
+```{r include=FALSE}
+#make mini dataframe just with long leaf info
+#datos.long <- datos.sinhojas[,c(17,20,21)]
+
+#Check how many values we have for each variable
+#sum(complete.cases(data3$)) #363
+sum(complete.cases(data3$length.leaf.union)) #363
+
+#sum(complete.cases(datos.long$min.max.prom)) #358
+sum(complete.cases(data3$mean.length.leaf)) #358
+
+#sum(complete.cases(datos.long$long.hoja.cm.)) #234
+sum(complete.cases(data3$length.leaf.cm)) #233
+
+sum(complete.cases(data3[,c(17,22,23)])) #How many sp have the three values: 61
+#Chcek how many species have one of the three values
+#sum(complete.cases(datos.long))
+sum(rowSums(!is.na(data3[,c(17,22,23)]))>0) #563 tienen al menos un datos de longitud de hoja. 
+
+```
+
+11.- ¿Qué tanto difieren entre sí los diferentes tipos de datos?
+
+```{r include=FALSE}
+mean(data3$length.leaf.cm, na.rm = T)
+mean(data3$mean.length.leaf, na.rm = T)
+mean(data3$length.leaf.union, na.rm = T)
+
+#Para saber cuáles difieren más se puede hacer la diferencia, luego un sort 
+# y después un subset. 
+data3$dif.mean.length.union <- (data3$mean.length.leaf - data3$length.leaf.union)
+
+data3[order(data3$dif.mean.length.union),]
+
+#datos.long.almenosuno <- datos.long[rowSums(!is.na(datos.long)) > 0 ,]
+
+#datos.long.almenosuno$dif1 <- datos.long.almenosuno$long.hoja.cm. - #datos.long.almenosuno$min.max.prom
+
+#datos.long.almenosuno$dif2 <- datos.long.almenosuno$long.hoja.cm. - #datos.long.almenosuno$peciolo.prom.lam.prom
+
+#datos.long.almenosuno$dif3 <-datos.long.almenosuno$min.max.prom - datos.long.almenosuno$peciolo.prom.lam.prom
+
+#long.hoja.matrix.dif <- as.matrix(datos.long.almenosuno[,c(4:6)])
+#library(gplots)
+#library(dplyr)
+#x <- long.hoja.matrix.dif %>% replace(is.na(.), 0)
+#heatmap.2(x)
+lm.fit(datos.long.almenosuno$long.hoja.cm. ~ datos.long.almenosuno$min.max.prom)
+
+```
+
+
+12- Repite los pasos 9 a 11 con el ancho de la hoja.
+
+
+13.- Hacer un modelo lineal de longitud de la planta vs diámetro de los conductos en la base.
+```{r include=FALSE}
+
+vdtip.stl.lm <- lm(log10(data$VD.tip.um.) ~ log10(data$stem.length.m))
+summary(vdtip.stl.lm)
+vdtip.stl.lm
+
+vdbase.stl.lm <- lm(log10(data3$VD.base.um) ~ log10(data3$stem.length.m))
+summary(vdbase.stl.lm)
+vdtip.stl.lm
+plot(vdtip.stl.lm)
+
+plot(log10(data3$stem.length.m),log10(data3$mean.length.leaf))
+plot(log10(data3$stem.length.m),log10(data3$VD.base.um))
+plot(log10(data3$VD.base.um),log10(data3$mean.length.leaf))
+plot(log10(data3$VD.tip.um.),log10(data3$mean.length.leaf))
+
+vdbase.stlandleaf.lm <- lm(log10(data3$VD.base.um) ~ log10(data3$stem.length.m)*log10(data3$length.leaf.union))
+summary(vdbase.stlandleaf.lm)
+
+
+meanlengthleaf.vdbase.lm <- lm(log10(data3$mean.length.leaf)~ log10(data3$VD.base.um))
+summary(meanlengthleaf.vdbase.lm)
+
+meanlengthleaf.vdtip.lm <- lm(log10(data3$mean.length.leaf)~ log10(data3$VD.tip.um.))
+summary(meanlengthleaf.vdtip.lm)
+
+meanlengthunion.vdtip.lm <- lm(log10(data3$length.leaf.union)~ log10(data3$VD.tip.um.))
+summary(meanlengthunion.vdtip.lm)
+plot(log10(data3$VD.tip.um.),log10(data3$length.leaf.union))
+plot(log10(data3$stem.length.m),log10(data3$VD.base.um))
+
+meanlengthunion.vdtip.lm <- lm(log10(data3$VD.tip.um.) ~ 
+                                 log10(data3$stem.length.m)* log10(data3$stem.length.m) )
+```

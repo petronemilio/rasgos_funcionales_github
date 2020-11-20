@@ -1,0 +1,138 @@
+---
+title: "Sesión Estadística descriptiva"
+author: "Julieta Rosell, Alberto Echeverría, Emilio Petrone, Mark Olson"
+date: "8 de octubre de 2020"
+output: html_document
+---
+========================================================
+
+Durante esta sesión comenzaremos a trabajar los datos que hemos estado colectando. ¡Qué emoción! Los objetivos de la sesión son:
+1. Revisar la presencia de outliers en nuestra base
+2. Recordar las estadísticas más usadas para describir datos
+3. Comenzaremos a discutir lo que incluiremos como estadística descriptiva en nuestro escrito colectivo
+4. Comenzaremos a construir nuestro script colaborativo
+
+1.Crea un proyecto de RStudio para la sesión de hoy que será útil para sesiones subsecuentes.
+
+2.Baja los datos de la base compartida en GoogleDocs para poder abrirlos en Excel. Guárdalos con la extensión .csv directamente pues usaremos read.csv. ¿Qué otras funciones conoces para importar datos en R?
+
+3.Después de entender la estructura general de la base que abriste en Excel, importa los datos a R.
+```{r, echo=TRUE}
+datos2 <- read.csv("../data/2020_10_08_Base.csv")
+#datos2 <- read.csv("2020_10_08_Base.csv")
+```
+
+4.Pide a R que te muestre el tipo de objeto y su estructura. Elimina las variables que no vamos a necesitar para el análisis 
+```{r, echo=TRUE}
+class(datos2)
+str(datos2)
+names(datos2)
+datos <- datos2[,c(1:7,11:19)]
+names(datos)
+```
+
+5.Nuestros nombres son espantosos. Cambiemos los nombres siguiendo un estándar de buenas prácticas en R. Hay muchos sitios para aprender buenas prácticas en línea. Este es uno de ellos: http://www.mlearningacademy.com/2018/03/29/r-names/#:~:text=The%20preferred%20form%20for%20variable,(FunctionName)%20should%20be%20used. ¿Qué dice sobre nombres de variables?
+```{r, echo=TRUE}
+names(datos) <- c("order", "family", "genus", "species.epithet", "stem.length.m", "VD.base.um", "VDtip.um", "min.long.hoja", "max.long.hoja", "min.long.peciolo", "max.long.peciolo", "min.long.lamina", "max.long.lamina", "min.ancho.hoja", "max.ancho.hoja", "tipo.hoja")
+```
+
+6.Pide de nuevo a R que te muestre la estructura de nuestros datos. ¿Qué notamos como problemas?
+```{r, echo=TRUE}
+str(datos)
+#Estudiantes deberán corregir los guiones en la base original hasta que ya no tengamos problemas
+#Hay problemas en minlongpeciolo, minanchohoja, maxanchohoja, tipo.hoja
+```
+<<<<<<< HEAD
+6.1. Si las variables relacionadas con el tamaño de hojas son leídas como factores conviertelas a númericas.
+```{r, echo=TRUE}
+names <- c("min.long.hoja", "max.long.hoja", "min.long.peciolo", "max.long.peciolo", "min.long.lamina", "max.long.lamina", "min.ancho.hoja", "max.ancho.hoja")
+datos[,names] <- lapply(datos[,names] , as.numeric)
+str(datos)
+```
+=======
+>>>>>>> ce7d2374a30b276dcf5deb516eab998d7261aa8e
+
+7.Pide a R que te muestre la dimensión del objeto con los datos. También pídele que te muestre los primeros y los últimos datos
+```{r, echo=TRUE}
+dim(datos)
+head(datos)
+tail(datos)
+```
+
+8.Solicita a R que te devuelva la media y la mediana de todos los datos continuos y una tabla de frecuencias para los datos categóricos. ¿Conoces algún comando que te devuelva el resumen de las estadísticas descriptivas de la base?
+```{r, echo=TRUE}
+mean(datos$max.long.hoja, na.rm=TRUE)
+median(datos$max.long.hoja, na.rm=TRUE)
+table(datos$tipo.hoja)
+summary(datos)
+```
+9.Parece que tenemos problemas con la variable tipo de hoja. Arreglemos esos problemas para que solamente tengamos dos niveles para ese factor.
+
+10.Genera una nueva vabiable que incluya el nombre binomial de la especie separando género y epíteto con un guión bajo.
+```{r, echo=TRUE}
+datos$species <- paste(datos$genus,"_",datos$species.epithet)
+```
+
+11.Revisa si hay diferentes ortografías para orden, familia y género. Arregla los problemas que surjan.
+```{r, echo=TRUE}
+table(datos$order)
+table(datos$family)
+```
+12.¿Cuál es la familia con mayor número de datos en la base? Lo puedes sacar a ojo, pero la idea es practicar con R la forma de hacerlo.
+```{r, echo=TRUE}
+sort(table(datos$family))
+```
+
+13.Genera un histograma para las variables continuas.¿Cómo es la distribución de los datos? ¿Qué transformación aplicarías para este tipo de distribución para lograr una distribución al menos más simétrica?
+```{r, echo=TRUE}
+hist(datos$VD.base.um)
+```
+
+14.Calcula las siguientes estadísticas descriptivas de tendencia central para la variable diámetro de vaso en la base: media, mediana y moda. ¿Cuál de estas medidas describiría de mejor manera el diámetro de vaso en la base?
+```{r, echo=TRUE}
+mean(datos$VD.base.um, rm=TRUE) 
+median(datos$VD.base.um, na.rm=TRUE)  
+tail(sort(table(datos$VD.base.um)),1)   #una forma posible para calcular la moda
+```
+15.Calcula las siguientes estadísticas de dispersión: varianza, rango, Q1, Q3, rango intercuartílico. Haz lo necesario para estos cálculos en presencia de datos faltantes. ¿Qué nos dicen los cuantiles y la mediana sobre la distribución de los datos de diámetro de vaso en la base?
+```{r, echo=TRUE}
+var(datos$VD.base.um, na.rm=TRUE)
+range(datos$VD.base.um, na.rm=TRUE) ##explicar el manejo de na. 
+quantile(datos$VD.base.um, na.rm=TRUE)
+```
+
+16.Calcula la desviación estándar de las siguientes formas: a) a través de la varianza, b) a través del comando sd() 
+```{r, echo=TRUE}
+sqrt(var(datos$VD.base.um, na.rm=TRUE))###sd a través de var()
+sd(datos$VD.base.um, na.rm=TRUE)### sd a través de sd() 
+```
+
+17.Calcula el coeficiente de variación para la variable diámetro de vaso en la base.
+```{r, echo=TRUE}
+<<<<<<< HEAD
+cvm <- (sd(datos$VD.base.um, na.rm=TRUE)/mean(datos$VD.base.um, na.rm=TRUE))*100
+=======
+cvm <- (sd(datos$VD.base.um, na.rm=TRUE)/mean(datos$max.long.hoja, na.rm=TRUE))*100
+>>>>>>> ce7d2374a30b276dcf5deb516eab998d7261aa8e
+cvm
+```
+18.Calcula las principales estadísticas descriptivas con la instrucción summary() para las especies con diámetro de vaso basal mayor a 100. ¿Cuántas especies tienen ese tamaño de vasos en la base?
+```{r, echo=TRUE}
+datos.VD.base.100um <- subset(datos, datos$VD.base.um>=100)
+dim(datos.VD.base.100um)
+summary(datos.VD.base.100um)
+```
+19.Calcula las principales estadísticas descriptivas con la instrucción summary() para las especies con un diámetro de vaso basal entre 50 y 150 um. ¿Cuántas especies tienen este tamaño de vaso?
+```{r, echo=TRUE}
+datos.50.a.150um <- subset(datos, datos$VD.base.um<=150 & datos$VD.base.um>=50 )
+dim(datos.50.a.150um)
+summary(datos.50.a.150um)
+```
+
+
+20.Calcula la media de la variable tamaño basal de los vasos para las diferentes familias de plantas.
+```{r, echo=TRUE}
+aggregate(datos$VD.base.um, by=list(datos$family), mean, na.rm=TRUE)
+```
+
+
