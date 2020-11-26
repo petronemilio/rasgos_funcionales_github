@@ -1,0 +1,7 @@
+Pregunta siete
+
+Las demás preguntas corresponden al script.
+
+7. Con base en tus respuestas, pero sin perder de vista la pregunta que estamos tratando de responder, ¿Cuál crees que deberíamos escoger como nuestra fuente primaria de datos para las especies con más de una fuente de datos? Fundamenta tu respuesta.
+
+R. Considerando la pregunta de investigación lo que nos interesa es la longitud total de la hoja y no de sus partes, por lo que como fuente primaria de datos proponemos usar los datos de la longitud de la hoja provenientes del promedio del mínimo y máximo de la longitud de la hoja, ya que es el conjunto que cuenta con el mayor número de datos, además de esta manera evitamos la variación debido a un error en la medición de las hojas.

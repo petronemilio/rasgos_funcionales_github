@@ -14,12 +14,12 @@ Además necesitas tener una cuenta de [github](https://github.com/).
 
 1.  Breve introducción a los sistemas de control de versiones (VCS, por sus siglas en inglés). 
 
-2.  SCV locales: Git.
+2.  VCS locales: Git.
     * Repositorios y su organización.
     * Comandos básicos y flujo de trabajo. 
     * `Branch` y `merge`: conceptos útiles para entender cómo funciona el programa.
 
-3.  SCV remotos : Github
+3.  VCS remotos : Github
     * ¿Qué es github y cómo uso una cuenta?
     * Un par de comandos más en github. 
     * Hacer introducción con hello world!
@@ -37,7 +37,7 @@ Los **VCS** son una herramienta para registrar y organizar cambios en una serie 
 
 ### VCS locales: Git
 
-[Git](https://gitforwindows.org/) es un VCS local con distribución en windows, mac y linux. Fue diseñado por Linus Trovalds para la creación de Linux y es de código abierto. 
+[Git](https://gitforwindows.org/) es un VCS local con distribución en windows, mac y linux. Fue diseñado por Linus Trovalds para la creación de Linux y es de código abierto. ¡Sí! Los VCS permiten crear cosas increíbles, como Linux.
 
 ![Linus Trovalds... chico listo!](../meta/linus_trovalds.png )
 
@@ -45,7 +45,7 @@ Los archivos y directorios que están sujetos a un historial de versiones en git
 
 #### Repositorios y su organización.
 
-Lo primero que hay que hacer en git es definir el directorio que estará sujeto a un historial de versiones, es decir un **repositorio** (¡¡¡Ding, ding ding!!! Concepto importante). 
+Lo primero que hay que hacer en git es definir el directorio que estará sujeto a un historial de versiones, es decir un **repositorio** (¡¡¡Ding, ding ding!!! Concepto importante). Para que quede claro repitamos que es un repositorio: un directorio sujeto a control de versiones.  
 ¿Cuál es la forma más común de organizar un repositorio?
 Aunque no hay un concenso es común encontrar repositorios que constan de cuatro directorios: 
 
@@ -62,23 +62,27 @@ Algunos ejemplos de como se organizan los repositorios:
 - [detectionfilter](https://github.com/TobiasRoth/detectionfilter)
 - [taxize](https://github.com/ropensci/taxize)
 
+Como podrás ver, el README contiene una descripción del repositorio así como de la organización del mismo. Explica de forma breve y clara lo que vas a encontrar en las diferentes carpetas y que hacen los scripts.
+
 #### Comandos básicos y flujo de trabajo. 
 
-Para que git sepa cuál es el repositorio que queremos tener bajo control de versiones se corre el comando `init`. Después se sigue un flujo de comandos que permite tener un buen seguimiento de las versiones que van cambiando con el tiempo. A continuación se presenta dicho flujo de trabajo:
+Para que git sepa cuál es el repositorio que queremos tener bajo control de versiones se corre el comando `init`. Después se sigue un flujo de comandos que permite tener un buen historial de las versiones que van cambiando con el tiempo. A continuación se presenta dicho flujo de trabajo:
 
 1. **init:** `$ git init` 
      `Initilized empty Git repository in /rasgos_funcionales_github/.git` 
 2. Realizar cambios en el repositorio: crear archivos nuevos, cambiar o editar archivos.
 3. `$ git status` 
 4. **add:**`$ git add [FILENAME]`: Agrega los archivos que quieres que git les siga la pista.
-5. **commit:**`$ git commit -m "mensaje sobre los cambios"`: Después de modificar un archivo hay que dejar un mensaje claro y preciso sobre las modificaciones realizadas a un archivo.
+5. **commit:**`$ git commit -m "mensaje sobre los cambios"`: Después de modificar un archivo hay que dejar un mensaje claro y preciso sobre las modificaciones realizadas en uno o varios archivos.
 6. Repetir a partir del punto 2.
 
 ![El workflow de git](../meta/version_control.png)
 
 #### `Branch` y `merge`: conceptos útiles para entender cómo funciona el programa.
 
-Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen el repositorio principal o la **master** branch. Al crear una rama que sale de la rama principal es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo por el cuál se creo la rama secundaria, se hace un `merge` de la `branch scundaria` con la **master** branch.
+Otro par de comandos (también pueden ser vistos como conceptos) centrales en git son `branch` y `merge`. `branch` crea una copia del repositorio principal (**master** branch) para realizar cambios que no comprometen al repositorio principal o la **master** branch. Cuando creamos ramas estamos buscando solucionar un problema en específico de nuestro código o archivo. Imagina que en una rama creada a partir de tu repo original te permitirá experimentar y probar muchas nuevas soluciones en tú código sin temor a que tu código "*ya no corra*".
+
+Al crear una rama que es importante elegir un nombre para la rama que refleje los objetivos que se planean mejorar de la **master** branch. Se realizan cambios en la `branch secundaria` y se hacen `commit` de la misma forma que se realizarían en la `master` branch. Una vez que logramos el objetivo por el cuál se creo la rama secundaria, se hace un `merge` de la `branch scundaria` con la **master** branch.
 
 Un esquema del proceso de hacer branches se ilustra en el siguiente esquema:
 
@@ -88,26 +92,30 @@ Git es un buen programa para detectar los cambios en las diferentes `branches` y
 
 ![](../meta/meme_conflicts.png)
 
-Los branches permiten la colaboración de mucha gente en un proyecto. Los `branches` son muy importantes en el mantra de git y se refleja en el logotipo del programa. 
+Si haces una `branch` y haces la misma modificación en ella y en la `master` branch git detectará conflictos y no podrá realizar el merge. Es por eso importante considerar bien los objetivos iniciales al crear una `branch`.
+
+Los branches permiten la colaboración de mucha gente en un proyecto de tal forma que múltiples personas pueden modificar código sin comprometer el código principal. Los `branches` son muy importantes en el mantra de git y se refleja en el logotipo del programa. 
 
 ![Git symbol](../meta/git_symbol.png)
+
+Con esta breve introducción de Git estamos listos para brincar a Github, que sigue la misma filosofía que Git.
 
 ### VCS remotos: Github
 
 #### ¿Qué es github y como uso una cuenta?
-Es un sitio web para trabajar y colaborar en proyectos que están sujetos a control de versiones basado en **git** y que guarda los repositorios en la red. También es una especie de red social de código. La gente puede ver tu perfil y tus repositorios y tú puedes ver el perfil de otros usuarios. 
+Es un sitio web para trabajar y colaborar en proyectos que están sujetos a control de versiones basado en **git** y que guarda los repositorios en la red. En otras palabras guarda los repositorios de forma remota. También es una especie de red social de código. La gente puede ver tu perfil y tus repositorios y tú puedes ver el perfil de otros usuarios. 
 
-Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `branch` ahora hay que agregar unos conceptos extras claves en github:
+Con el flujo de trabajo de git y entendiedo que es un `commit` y que es un `branch` ahora hay que agregar unos conceptos extras claves en el funcionamiento de Github:
 
-1. **fork**: cuando creas una copia de un repositorio en tu cuenta de github a partir de otra cuenta de github. Más documentación del `fork` en [github](https://docs.github.com/en/enterprise-server@2.20/github/getting-started-with-github/fork-a-repo#fork-an-example-repository)  
-2. **clone**: baja el repositorio remoto a tu cuenta local.
+1. **fork**: cuando creas una copia de un repositorio en tu cuenta de Github a partir de otra cuenta de github. Más documentación del `fork` en [github](https://docs.github.com/en/enterprise-server@2.20/github/getting-started-with-github/fork-a-repo#fork-an-example-repository)  
+2. **clone**: baja el repositorio remoto a tu cuenta local (a tu computadora).
 3. **pull**: baja la última versión de un repositorio remoto y se incorporan los cambios con tu repositorio local. 
-4. **push**: envias los cambios y commits del repositorio local al repositorio reomoto u _online_. Esto solo funciona si tu eres dueño del repositorio remoto, de lo contrario se debe de hacer un `pull request`.
-5. **pull request**: si tu no eres propietario de un repositorio remoto debes de subir tus cambios como sugerencia de cambio. Tu no haces el `push`, sino que sugieres al autor que haga un `pull` de tus cambios. Una vez que el propietario del repositorio ha revisado y aceptado los cambios, fusiona las ramas con un `merge`.
+4. **push**: envias los cambios y commits del repositorio local al repositorio remoto u _online_. Esto solo funciona si tu eres dueño del repositorio remoto, de lo contrario se debe de hacer un `pull request`.
+5. **pull request**: si tu no eres propietario de un repositorio remoto debes de subir tus cambios como sugerencia de cambio. Tu no haces el `push`, sino que sugieres al autor que haga un `pull` de tus cambios (por eso el `pull request`). Una vez que el propietario del repositorio ha revisado tus cambios, este decide si aceptado los cambios. Es recomendable hacer cambios a partir de una branch, de tal forma que el dueño del repo fusiona las ramas con un `merge` en caso de que acepte las sugerencias de cambio.
 
 #### Hacer introducción con hello world!
 
-Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad en github. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, haz los pasos del ejercicio y nos vemos en 10 minutos.
+Ahora que ya sabemos un poco sobre git y github hagamos nuestra primer actividad. Ve a la [intro: hello-world](https://guides.github.com/activities/hello-world/) de github. Leela con cuidado, haz los pasos del ejercicio y nos vemos en 10 minutos.
 
 El proceso de hacer ramas se puede poner muy complicado. Aquí dejo un link para que vean un modelo exitoso de [branches](https://nvie.com/posts/a-successful-git-branching-model/)!
 
@@ -145,26 +153,27 @@ Aprender y ejecutar los comandos y repetirlo podría quitar mucho tiempo. Maneja
 
 Ahora trataremos de hacer un repositorio usando R studio. Antes de clonar el repositorio es importante configurar git en tu computadora. Esto se puede hacer de varias formas:
 
-1. Si tienes familiaridad con la terminal (Mac, Linux) abre una terminal y escribe:
+1. Si tienes familiaridad con la terminal (Mac, Linux) abrela y escribe:
 ``` bash
 git config --global user.name "petronemilio"
 git config --global user.email "emilio.petrone@st.ib.unam.mx"
 ```
 También puedes abrir una terminal desde R studio y correr los comandos del paso 1.
 
-2. Otra opción es correr en el prompt de R o en un script los siguientes comandos:
+2. Otra opción es correr en el prompt de R o en un script de r los siguientes comandos:
 ``` R
     ## install if needed (do this exactly once) 
     install.packages("usethis")
     library(usethis)
     use_git_config(user.name = "petronemilio", user.email = "emilio.petrone@st.ib.unam.mx")
 ```  
+Al definir el `user.name` git y github sabrán como comunicarse entre sí, facilitando copiar repositorios locales y remotos. El `user.name` de tu computadora debe de ser igual al de tu cuenta de github. El correo (`user.email`) también debe ser igual en tu computadora y en tu correo.  
 
-Ahora hay que decirle a R studio donde está el ejecutable de Git. Ve a `Tools`> `Global Options`. Se abrirá un cuadro de diálogo que dice **Options** y vayan a la opción de Git/SVN. 
+Ahora hay que decirle a R studio donde está el ejecutable de Git. Ve a `Tools`> `Global Options`. Se abrirá un cuadro de diálogo que dice **Options**. Vayan a la opción de Git/SVN. 
 
 ![](../meta/rstudio_git_setup.png)
 
-**¡¡Ojo!!** /usr/bin es la ruta relativa a una buena parte de los archivos ejecutables en linux. Esto sginifica que en esa carpeta se encuentran archivos ejecutables de , por ejemplo, python y otros programas de linux. En mac y a veces en linux tus archivos ejecutables se pueden guardar en /usr/local/bin. Si tienes dudas de donde está guardado tu git corre en una terminal el siguiente comando:
+**¡¡Ojo!!** /usr/bin es la ruta relativa a una buena parte de los archivos ejecutables en linux. Esto sginifica que en esa carpeta se encuentran archivos ejecutables de, por ejemplo, python y otros programas de linux. En mac y a veces en linux tus archivos ejecutables se pueden guardar en /usr/local/bin. Si tienes dudas de donde está guardado tu git, corre en una terminal el siguiente comando:
 
 ```
 which git
@@ -175,8 +184,8 @@ Así podrás ver el lugar donde se encuentra git.
 En windows es común que git se instale en:
 `C:\Program Files (x86)/Git/bin/git.exe`
 
-Si así fuera el caso, agrga esa ruta en la pestaña `git executable` de tu configuración global en R studio. 
-Reinicia tu R studio para que todo este listo.
+Si así fuera el caso, agrga esa ruta en la pestaña `git executable` de tú configuración global en R studio. 
+Reinicia R studio para que todo este listo.
 
 ### Clonación de un repositorio desde R studio
 
@@ -186,7 +195,7 @@ Después de esto vamos a intentar clonar el repositorio que contiene a este arch
 
 ![](../meta/fork.png)
 
-2. Después de tener una copia del repositorio en tú cuenta ahora hay que hacer una copia local utilizando R studio. Busca el botón verde que dice `Code`. Copia el url del repositorio y ve a R studio.
+2. Después de tener una copia del repositorio en tú cuenta ahora hay que hacer una copia local utilizando R studio. Busca el botón verde que dice `Code` en Github. Copia el url del repositorio y ve a R studio.
 
 ![](../meta/clone.png)
 
@@ -207,7 +216,12 @@ Después de esto vamos a intentar clonar el repositorio que contiene a este arch
 Si los pasos previos salieron bien estás listo para hacer una contribución a un repositorio clonado. 
 
 #### Otra nota importante:
-Si forkeaste un repo y luego lo clonaste en R studio es importante que cada que lo vayas a modificar y utilizar realices un pull. De esa forma tendrás la última versión del repositorio y no la versíon que existía cuando hiciste el fork.
+Si forkeaste un repo y luego lo clonaste en R studio es importante que cada que lo vayas a modificar y utilizar realices un pull. De esa forma tendrás la última versión del repositorio remoto de tú cuenta. Si el o la propietaria del repositorio hace modificaciones tendrás que correr un comando adicional para que se actualice el repo remoto forkeado y tu repo local. El comando es el siguiente:
+
+``` bash
+git pull upstream master --ff-only
+``` 
+La opción `-ff-only` solo funcionará si tu no has realizado modificaciones en el repo local. Por ello es importante que antes de empezar a trabajar en la modificación de un código te asegures de tener la versión más actualizada del repo original.  
 
 ### Primera exploración de la base.
 
