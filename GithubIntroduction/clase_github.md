@@ -218,14 +218,16 @@ Si los pasos previos salieron bien estás listo para hacer una contribución a u
 #### ¿Cómo mantener al día un repo forkeado?
 Si forkeaste un repo y luego lo clonaste en R studio es importante que cada que lo vayas a modificar y utilizar realices un pull. De esa forma tendrás la última versión del repositorio remoto de tú cuenta. ¡Ojo! Al hacer ese pull la actualización solo será con respecto a tÚ repositorio forkeado. Es decir no tendrás la versión del dueño del repositorio. A continuación se muestra un diagrama de lo que ocurre al forkear y clonar el repo:
 
-**owner/RepoDeInteres**  ---fork----> **cloner/RepoDeInteres**
-                                                |
-                                                |
-                                              clone
-                                                |
-                                      **cloner/RepoDeInteres**
+                                               
+     owner/RepoDeInteres  --- fork ----> cloner/RepoDeInteres
+                                               |  
+                                               |
+                                               |
+                                             clone
+                                               |  
+                                        cloner/RepoDeInteres
 
-Al clonar el repo en Rstudio solo se establece comunicación entre el repositorio local y remoto **cloner/RepoDeInteres** pero no con el **owner/RepoDeInteres**. Sería todo más fácil si la comunicación con el **owner/RepoDeInteres** fuera directa. Sin embargo, esto no se puede y hay que decirle a git cuál es el repositorio original (se le suele llamar el repo **upstream**). Para hacer eso hay dos opciones. La primer es desde la interfaz gráfica de Rstudio. Ve al ícono de branches en git. Verás un botón que dice Add Remote. Dale a esa opción y agrega en el nombre del remoto `remote` y debajo agrega el URL del `owner/repo`.
+Al clonar el repo en Rstudio solo se establece comunicación entre el repositorio local y remoto `cloner/RepoDeInteres` pero no con el `owner/RepoDeInteres`. Sería todo más fácil si la comunicación con el `owner/RepoDeInteres` fuera directa. Sin embargo, esto no se puede y hay que decirle a git cuál es el repositorio original (se le suele llamar el repo **upstream**). Para hacer eso hay dos opciones. La primer es desde la interfaz gráfica de Rstudio. Ve al ícono de branches en git. Verás un botón que dice Add Remote. Dale a esa opción y agrega en el nombre del remoto `remote` y debajo agrega el URL del `owner/repo`.
 Más detalles sobre forkear y clonar los puedes encontrar [aquí](https://happygitwithr.com/fork-and-clone.html).
 
 Ahora que tienes comunicación entre el repo originial podemos `pullear` los cambios que se realicen en el `owner/repo`. Para ello hay correr el siguiente comando en la terminal:
