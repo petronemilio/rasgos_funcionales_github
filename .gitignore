@@ -3,4 +3,3 @@ meta/*.jpeg
 *.html
 GithubIntroduction/*.html
 .Rhistory
-data/*.csv
