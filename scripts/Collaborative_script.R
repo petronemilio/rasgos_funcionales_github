@@ -1,4 +1,4 @@
-#cargar todas las librerias que se van a usar
+#installing or loading packages
 library(dplyr)
 library(car)
 library(ggplot2)
