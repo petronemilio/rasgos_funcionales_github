@@ -2,3 +2,4 @@ meta/*.jpeg
 .Rproj.user
 *.html
 GithubIntroduction/*.html
+.Rhistory
