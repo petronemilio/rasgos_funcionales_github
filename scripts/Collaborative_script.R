@@ -15,7 +15,7 @@ str(traits)
 #explorar la variable final de long de hoja final
 
 #####P1. ¿Qué tanto explica la longitud de la hoja la variación en diámetro  de los vasos en la base de un árbol, con y 
-#####  sin consideració de la altura? [Eq.3]
+#####  sin consideració de la altura? [Eq.2]
 #plot con Y:diámetro basal, X1:long de hoja, X2:altura
 #evaluar la necesidad de transformación de variables
 #modelo; ajustarlo
