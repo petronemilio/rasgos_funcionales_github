@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #Cargando la base de datos
 traits <- read.csv("data/2020_11_12_Base.csv")
 names(traits) #revisar nombres#
@@ -17,7 +16,7 @@ str(traits)
 #extraer datos de las dos fuentes y crear una nueva col donde se combinen para tener un único dato de long de hoja
 #explorar la variable final de long de hoja final
 
-=======
+
 #cargamos librerias
 library(ggplot2)
 library(corrplot)
@@ -195,7 +194,7 @@ corrplot(long.hoj.matrix$r, type="upper", order="hclust",
          p.mat = long.hoj.matrix$P, sig.level = 0.05, bg="WHITE",
          tl.col = "black", tl.srt = 45, pch.cex=2, outline=T, addCoef.col = T)
 
->>>>>>> 88dbe39c494c357b5f58dffbfcf22c6977797b6f
+
 #####Estadística descriptiva. Equipo: Claudia, Brenda y Angélica, Emmanuel García 
 #
 #####P1. ¿Qué tanto explica la longitud de la hoja la variación en diámetro  de los vasos en la base de un árbol, con y 
@@ -215,7 +214,3 @@ corrplot(long.hoj.matrix$r, type="upper", order="hclust",
 #modelo; ajustarlo
 #checar cumplimiento de supuestos en residuos de modelos ajustados
 #checar si tenemos colinealidad  
-<<<<<<< HEAD
-=======
-
->>>>>>> 88dbe39c494c357b5f58dffbfcf22c6977797b6f
