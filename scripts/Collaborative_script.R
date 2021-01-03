@@ -1,7 +1,10 @@
 #cargamos librerias
 library(ggplot2)
+library(corrplot)
+library(Hmisc)
+
 #Cargando la base de datos
-traits <- read.csv("data/2020-12-02_Base_curso_rasgos.csv")
+traits <- read.csv("2020_12_31_Base.csv")
 names(traits) #revisar nombres#
 str(traits)
 #######exploratory analyses ######
@@ -31,6 +34,7 @@ names(traits.db)
 ##verificar los niveles de los factores, rangos de variación de vars continuas
 factores<-factor(traits.db$leaf.type)
 length(levels(factores))
+
 #combinamos la fila de epiteto y genero
 traits.db$species <- paste(traits.db$genus, traits.db$species.epithet, sep = "_")
 names(traits.db)
@@ -38,11 +42,11 @@ names(traits.db)
 #filtrar por dato de hoja
 
 traits.db <- subset(traits.db, leaf.type == "compound"|
-                  leaf.type=="simple")
+                      leaf.type=="simple")
 
-#Así obtuvimos las columnas de interés:
+#Así obtuvimos las columnas de interés (recuerda revisar los numeros de las columnas):#
 
-traits.db["long.hoja"]<-traits.db[15]  #1) longitud de hoja "cruda"
+traits.db["long.hoja"]<-traits.db[17]  #1) longitud de hoja "cruda"
 traits.db["long.hoja.mean"]<-(traits.db[8]+traits.db[9])/2 #2) promedio de los mínimos y máximos de la longitud de la hoja
 traits.db["long.lam.pet.mean"]<-((traits.db[10]+traits.db[11])/2)+((traits.db[12]+traits.db[13])/2) #3) promedio de los mínimos y máximos de la lámina + peciolo
 
@@ -52,6 +56,7 @@ write.csv(traits.db,"BaseRasgos_30dic2020.csv")
 
 #diferencias cuantitativas entre diferentes fuentes de informacion de las
 #longitudes de hoja
+
 traits.db$diferencia12 <- abs(traits.db$long.hoja - traits.db$long.hoja.mean)
 traits.db$diferencia13 <- abs(traits.db$long.hoja - traits.db$long.lam.pet.mean)
 traits.db$diferencia23 = abs(traits.db$long.hoja.mean - traits.db$long.lam.pet.mean)
@@ -68,7 +73,7 @@ traits.db[order(-traits.db$diferencia23),][1:10,]
 #graficamos para observar aquellas especies que estan mal ingresadas o son grandes
 #por naturaleza
 ggplot(traits.db, aes(x=(log10(long.hoja)), 
-                   y=(log10(long.lam.pet.mean)), label=species))+
+                      y=(log10(long.lam.pet.mean)), label=species))+
   geom_point(size=1)+stat_smooth(formula= y~x, method = "lm")+
   geom_text(position = "identity", angle=25, size=2.5, alpha=0.8)
 
@@ -141,22 +146,34 @@ colnames(traits.db) <- c("order","family","genus","species",
                          "min.length.petiole", "max.length.petiole",
                          "min.length.blade", "max.length.blade", "leaf.type",
                          "long.hoja", "long.hoja.mean", "long.lam.pet.mean",
-                         "long.hoja.concenso")
+                         "long.hoja.consenso")
 
-#descargamos base depurada y con variable consenso
+#descargamos base depurada y con variable consenso#
 
 write.csv(traits.db, "BaseRasgos_UltraCompleta_30dic2020.csv")
 
 #revisamos los outlayers para comprobar que la revision a los valores extraños
 #hayan sido adecuada
-dotchart(log10(traits.db$long.hoja.concenso))
-hist(log10(traits.db$long.hoja.concenso))
+dotchart(log10(traits.db$long.hoja.consenso))
+hist(log10(traits.db$long.hoja.consenso))
 
 #Funciona - SE OBTIENE BASE PULIDA FINAL
 
 #análisis de correlación bivariada de todas las variables
 
+names(traits.db) #para ver las variables cuantitativas#
+long.hoja.cor<-subset(traits.db[, c(5, 6, 7, 18)]) #seleccionar variables de interes#
 
+#realizar matriz de correlación y graficarla#
+long.hoj.matrix = rcorr(as.matrix(long.hoja.cor))
+long.hoj.matrix$r
+
+corrplot(long.hoj.matrix$r, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+corrplot(long.hoj.matrix$r, type="upper", order="hclust", 
+         p.mat = long.hoj.matrix$P, sig.level = 0.05, bg="WHITE",
+         tl.col = "black", tl.srt = 45, pch.cex=2, outline=T, addCoef.col = T)
 
 #####Estadística descriptiva. Equipo: Claudia, Brenda y Angélica, Emmanuel García 
 #
@@ -177,3 +194,4 @@ hist(log10(traits.db$long.hoja.concenso))
 #modelo; ajustarlo
 #checar cumplimiento de supuestos en residuos de modelos ajustados
 #checar si tenemos colinealidad  
+
