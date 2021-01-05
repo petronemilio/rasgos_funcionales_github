@@ -214,3 +214,29 @@ corrplot(long.hoj.matrix$r, type="upper", order="hclust",
 #modelo; ajustarlo
 #checar cumplimiento de supuestos en residuos de modelos ajustados
 #checar si tenemos colinealidad  
+
+###Paso1. Cargar base
+base <- read.csv("BaseRasgos_UltraCompleta_30dic2020.csv")
+####Paso2. Graficas. Y:di?metro apical, X1:long de hoja, X2:altura
+par(mfrow=c(1,3))
+plot(VD.tip.um ~ long.hoja.concenso, data=base)
+plot(VD.tip.um ~ stem.length.m, data=base)
+plot(long.hoja.concenso ~ stem.length.m, data=base)
+####Convertir a log. Mantener esta transformaci?n, las gr?ficas se aprecian mejor as?. 
+par(mfrow=c(1,3))
+plot(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
+plot(log(VD.tip.um) ~ log(stem.length.m), data=base)
+plot(log(long.hoja.concenso) ~ log(stem.length.m), data=base)
+####P3. ?Qu? tanto explica la longitud de la hoja la variaci?n en el di?metro  de los vasos en el ?pice de un ?rbol, con y 
+#####sin consideraci?n de la altura? [XXXXX]
+model1<- lm(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
+summary(model1)
+model2<- lm(log(VD.tip.um) ~ log(long.hoja.concenso)+log(stem.length.m), data=base)
+summary(model2)
+model3<-lm(log(VD.tip.um) ~ log(long.hoja.concenso) * log(stem.length.m), data=base)
+summary(model3)
+####Checar cumplimiento de supuestos en residuos de modelos ajustados
+par(mfrow=c(2,2))
+plot(model1)
+plot(model2)
+plot(model3)
