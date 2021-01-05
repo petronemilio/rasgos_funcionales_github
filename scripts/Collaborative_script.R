@@ -1,3 +1,8 @@
+#Cargando la base de datos
+traits <- read.csv("data/2020-12-02_Base_curso_rasgos.csv", header = T)
+names(traits) #revisar nombres#
+str(traits)
+
 
 ####### Comandos para limpiar y crear la variable consenso ##########
 #Checar existencia de outliers y ver si es dato original o hubo algún error en su captura
@@ -168,9 +173,12 @@ colnames(traits.db) <- c("order","family","genus","species",
 
 write.csv(traits.db, "BaseRasgos_UltraCompleta_30dic2020.csv")
 
-#revisamos los outlayers para comprobar que la revision a los valores extraños hayan sido adecuada
-dotchart(log10(traits.db$long.hoja.consenso))
-hist(log10(traits.db$long.hoja.consenso))
+
+#revisamos los outlayers para comprobar que la revision a los valores extraños
+#hayan sido adecuada
+dotchart(log10(traits.db$long.hoja.concenso))
+hist(log10(traits.db$long.hoja.concenso))
+
 
 #Funciona - SE OBTIENE BASE PULIDA FINAL
 
@@ -193,25 +201,63 @@ corrplot(long.hoj.matrix$r, type="upper", order="hclust",
 
 ##### Estadística descriptiva. Equipo: Claudia, Brenda y Angélica, Emmanuel García 
 #
+#llamamos a las librerias
+library(GGally)
+
 #####P1. ¿Qué tanto explica la longitud de la hoja la variación en 
-######diámetro  de los vasos en la base de un árbol, con y 
-######sin consideració de la altura? [XXXXX]
-#nombramos como objetos a las variables
-x01<-data02$stem.length.m
-x02<-data02$length.leaf.cm
-y<-data02$VD.base.um
+#######diámetro  de los vasos en la base de un árbol, con y 
+#####  sin consideració de la altura? 
+x01<-traits.db$stem.length.m
+x02<-traits.db$long.hoja.concenso
+y<-traits.db$VD.base.um
 #plot con Y:diámetro basal, X02:long de hoja, X01:altura
 ##utilizando un modelo lineal
-lm00<-lm(y ~ x02)
-summary(lm00)
-lm01<-lm(y ~ x02 + x01)
-summary(lm01)
+lm_sinaltura<-lm(y ~ x02)
+summary(lm_sinaltura)
+lm_conaltura<-lm(y ~ x02 + x01)
+summary(lm_conaltura)
+## El r2 ajustado del modelo con altura es mayor que el modelo sin altura
+
 #graficamos
 par(mfrow = c(1,2))
 plot(x02, y)
-abline(lm00)
+abline(lm_sinaltura)
 plot(x02 + x01, y)
-abline(lm01)
+abline(lm_conaltura)
+
+#evaluar la necesidad de transformación de variables
+#modelo; ajustarlo
+##modelo lineal:
+lm_log_sinaltura<-lm(log (y) ~ log (x02))
+summary(lm_log_sinaltura)
+lm_log_conaltura<-lm(log (y) ~ log (x02) + log (x01))
+summary(lm_log_conaltura)
+#graficamos
+par(mfrow = c(1,2))
+plot(log(x02) ~ log(y))
+abline(lm_log_sinaltura, col = "red")
+plot(log(x02) + log(x01), log (y))
+abline(lm_log_conaltura, col = "red")
+## Los datos se distribuyen de manera menos aglomerada. Ademas el r2 ajustado de 
+# ambos modelos mejoran al transformarlos logaritmicamente.
+# Entonces se concluye que los datos medidos en escalas diferentes son mas
+# comparables entre si. 
+
+
+#checar cumplimiento de supuestos en residuos de modelos ajustados
+par(mfrow = c(2,2))
+plot(lm_log_sinaltura)
+
+par(mfrow = c(2,2))
+plot(lm_log_conaltura)
+# En ambos casos se cumple el supuesto de residuos. Sin embargo, los residuos parecen
+# ajustarse mejor con altura. 
+
+#checar si tenemos colinealidad
+db.cor <- data.frame(y, x01, x02)
+ggpairs(db.cor)
+# No hay coliniaridad entre las variables altura de la planta y longitud de la hoja. 
+
 
 #evaluar la necesidad de transformación de variables
 #modelo; ajustarlo
