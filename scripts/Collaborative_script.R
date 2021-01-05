@@ -3,37 +3,39 @@ traits <- read.csv("data/2020-12-02_Base_curso_rasgos.csv", header = T)
 names(traits) #revisar nombres#
 str(traits)
 
-########## 
-#Equipo: Jess-Diego-Belén-EmmanuelMtz 
-#exploratory analyses [XXXXXX]
-#Checar existencia de outliers y corregir el problema
-#tipo de variables que tenemos, que el reconocimiento sea correcto
-#análisis de correlación bivariada de todas las variables
-#verificar los niveles de los factores, rangos de variación de vars continuas
+
+####### Comandos para limpiar y crear la variable consenso ##########
+#Checar existencia de outliers y ver si es dato original o hubo algún error en su captura
 #datos faltantes, cuántos hay y cómo se están manejando
+#crear la variable consenso final (extraer datos de las dos fuentes y crear una nueva col donde se combinen para tener un único dato de long de hoja)
 
-#####creating final consensus variables
-#extraer datos de las dos fuentes y crear una nueva col donde se combinen para tener un único dato de long de hoja
-#explorar la variable final de long de hoja final
+####### Análisis exploratorios de las variables que vamos a considerar en nuestros modelos #########
+#Checar existencia de outliers y ver si es dato original o hubo algún error en su captura
+#tipo de variables que tenemos, que el reconocimiento sea correcto factor, character, num, logical,
+#verificar los niveles de los factores, rangos de variación de variables continuas
+
+## Creo que estás dos secciones les corresponderian al Equipo 1: Jess-Diego-Belén-EmmanuelMtz ##
 
 
-#cargamos librerias
+
+############## Análisis estadísticos descriptivos ################
+## Creo que está sección le corresponde al Equipo 2: Claudia, Brenda y Angélica, Emmanuel García 
+
+############# Modelos de regresión lineal ####################
+## Creo que en está sección ya podemos juntar los modelos del ápice y la base
+# Equipo 2: Claudia, Brenda y Angélica, Emmanuel García y Equipo 3: Karla, Mariana, Iván y Karen
+
+
+#Librerias
 library(ggplot2)
 library(corrplot)
 library(Hmisc)
 
 #Cargando la base de datos
-traits <- read.csv("2020_12_31_Base.csv")
+traits <- read.csv("2020_12_31_Base.csv")## Esta base no está en el directorio
 names(traits) #revisar nombres#
 str(traits)
 #######exploratory analyses ######
-
-##### Equipo de la cajita ->
-## Nombres: Cortéz Castro Ericka Belen
-##      Hernández Jessica 
-##			Escalante Pasos Jorge Armín
-##      Martínez  Emmanuel
-##			Dávila Navarro Diego Emilio
 
 #Checar existencia de outliers y corregir el problema
 #tipo de variables que tenemos, que el reconocimiento sea correcto
@@ -171,10 +173,12 @@ colnames(traits.db) <- c("order","family","genus","species",
 
 write.csv(traits.db, "BaseRasgos_UltraCompleta_30dic2020.csv")
 
+
 #revisamos los outlayers para comprobar que la revision a los valores extraños
 #hayan sido adecuada
 dotchart(log10(traits.db$long.hoja.concenso))
 hist(log10(traits.db$long.hoja.concenso))
+
 
 #Funciona - SE OBTIENE BASE PULIDA FINAL
 
@@ -195,7 +199,7 @@ corrplot(long.hoj.matrix$r, type="upper", order="hclust",
          tl.col = "black", tl.srt = 45, pch.cex=2, outline=T, addCoef.col = T)
 
 
-#####Estadística descriptiva. Equipo: Claudia, Brenda y Angélica, Emmanuel García 
+##### Estadística descriptiva. Equipo: Claudia, Brenda y Angélica, Emmanuel García 
 #
 #llamamos a las librerias
 library(GGally)
@@ -254,12 +258,66 @@ db.cor <- data.frame(y, x01, x02)
 ggpairs(db.cor)
 # No hay coliniaridad entre las variables altura de la planta y longitud de la hoja. 
 
-######
-#Karla, Mariana, Karen, Iván
-#####P3. ¿Qué tanto explica la longitud de la hoja la variación en el diámetro  de los vasos en el ápice de un árbol, con y 
-#####sin consideración de la altura? [XXXXX]
-#plot con Y:diámetro apical, X1:long de hoja, X2:altura
+
 #evaluar la necesidad de transformación de variables
 #modelo; ajustarlo
+##modelo lineal:
+lm00<-lm(log (y) ~ log (x02))
+summary(lm00)
+lm01<-lm(log (y) ~ log (x02) + log (x01))
+summary(lm01)
+#graficamos
+par(mfrow = c(1,2))
+plot(log(x02) ~ log(y))
+abline(lm00)
+plot(log(x02) + log(x01), log (y))
+abline(lm01)
+
+#####Con base en las graficas generadas al cambiar el modelo, se observa un mejor ajuste####
+
 #checar cumplimiento de supuestos en residuos de modelos ajustados
+par(mfrow = c(2,2))
+plot(lm00)
+
+par(mfrow = c(2,2))
+plot(lm01)
+
 #checar si tenemos colinealidad  
+cotorro <- data.frame(y, x01, x02)
+library(GGally)
+ggpairs(cotorro)
+
+
+##### Modelo de variación en el diámetro de los conductos del ápice #####
+## Karla, Mariana, Karen, Iván ##
+
+###Paso1. Cargar base
+base <- read.csv("BaseRasgos_UltraCompleta_30dic2020.csv")
+
+####Paso2. Graficas. Y:diámetro apical, X1:long de hoja, X2:altura
+par(mfrow=c(1,3))
+plot(VD.tip.um ~ long.hoja.concenso, data=base)
+plot(VD.tip.um ~ stem.length.m, data=base)
+plot(long.hoja.concenso ~ stem.length.m, data=base)
+
+####Convertir a log. Mantener esta transformación, las gráficas se aprecian mejor así. 
+par(mfrow=c(1,3))
+plot(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
+plot(log(VD.tip.um) ~ log(stem.length.m), data=base)
+plot(log(long.hoja.concenso) ~ log(stem.length.m), data=base)
+
+####P3. ¿Qué tanto explica la longitud de la hoja la variación en el diámetro  de los vasos en el ápice de un árbol, 
+#con y sin consideración de la altura?
+
+model1<- lm(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
+summary(model1)
+model2<- lm(log(VD.tip.um) ~ log(long.hoja.concenso)+log(stem.length.m), data=base)
+summary(model2)
+model3<-lm(log(VD.tip.um) ~ log(long.hoja.concenso) * log(stem.length.m), data=base)
+summary(model3)
+
+####Checar cumplimiento de supuestos en residuos de modelos ajustados
+par(mfrow=c(2,2))
+plot(model1)
+plot(model2)
+plot(model3)
