@@ -262,12 +262,36 @@ library(GGally)
 ggpairs(cotorro)
 
 
-######
-#Karla, Mariana, Karen, Iván
-#####P3. ¿Qué tanto explica la longitud de la hoja la variación en el diámetro  de los vasos en el ápice de un árbol, con y 
-#####sin consideración de la altura? [XXXXX]
-#plot con Y:diámetro apical, X1:long de hoja, X2:altura
-#evaluar la necesidad de transformación de variables
-#modelo; ajustarlo
-#checar cumplimiento de supuestos en residuos de modelos ajustados
-#checar si tenemos colinealidad  
+##### Modelo de variación en el diámetro de los conductos del ápice #####
+## Karla, Mariana, Karen, Iván ##
+
+###Paso1. Cargar base
+base <- read.csv("BaseRasgos_UltraCompleta_30dic2020.csv")
+
+####Paso2. Graficas. Y:diámetro apical, X1:long de hoja, X2:altura
+par(mfrow=c(1,3))
+plot(VD.tip.um ~ long.hoja.concenso, data=base)
+plot(VD.tip.um ~ stem.length.m, data=base)
+plot(long.hoja.concenso ~ stem.length.m, data=base)
+
+####Convertir a log. Mantener esta transformación, las gráficas se aprecian mejor así. 
+par(mfrow=c(1,3))
+plot(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
+plot(log(VD.tip.um) ~ log(stem.length.m), data=base)
+plot(log(long.hoja.concenso) ~ log(stem.length.m), data=base)
+
+####P3. ¿Qué tanto explica la longitud de la hoja la variación en el diámetro  de los vasos en el ápice de un árbol, 
+#con y sin consideración de la altura?
+
+model1<- lm(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
+summary(model1)
+model2<- lm(log(VD.tip.um) ~ log(long.hoja.concenso)+log(stem.length.m), data=base)
+summary(model2)
+model3<-lm(log(VD.tip.um) ~ log(long.hoja.concenso) * log(stem.length.m), data=base)
+summary(model3)
+
+####Checar cumplimiento de supuestos en residuos de modelos ajustados
+par(mfrow=c(2,2))
+plot(model1)
+plot(model2)
+plot(model3)
