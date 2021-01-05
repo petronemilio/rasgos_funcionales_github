@@ -1,5 +1,5 @@
 #Cargando la base de datos
-traits <- read.csv("data/2020_11_12_Base.csv")
+traits <- read.csv("data/2020-12-02_Base_curso_rasgos.csv", header = T)
 names(traits) #revisar nombres#
 str(traits)
 
