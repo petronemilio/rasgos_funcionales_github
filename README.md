@@ -1,4 +1,4 @@
-## README
+#### README
 
 This repository contains a markdown file with an introductory lecture to Git and Github. It also contains a database with some functional traits related to the hydraulic system in plants.
 
