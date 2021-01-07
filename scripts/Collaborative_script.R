@@ -122,7 +122,7 @@ dotchart(log(traits.db$long.lam.pet.mean))
 #Después de revisada y analizados los valores extraños, realizamos la columna consenso
 #hecha en tres pasos
 #Primero volvemos a cargar la base de datos pulida
-traits.db<-read.csv("data/BaseRasgos_Completa_30dic2020.csv")
+traits.db<-read.csv("data/BaseRasgos_30dic2020.csv")
 
 #paso 1
 #written argument:
@@ -171,13 +171,13 @@ colnames(traits.db) <- c("order","family","genus","species",
 
 #descargamos base depurada y con variable consenso#
 
-write.csv(traits.db, "BaseRasgos_UltraCompleta_30dic2020.csv")
+write.csv(traits.db, "data/BaseRasgos_UltraCompleta_30dic2020.csv")
 
 
 #revisamos los outlayers para comprobar que la revision a los valores extraños
 #hayan sido adecuada
-dotchart(log10(traits.db$long.hoja.concenso))
-hist(log10(traits.db$long.hoja.concenso))
+dotchart(log10(traits.db$long.hoja.consenso))
+hist(log10(traits.db$long.hoja.consenso))
 
 
 #Funciona - SE OBTIENE BASE PULIDA FINAL
@@ -207,36 +207,36 @@ library(GGally)
 #####P1. ¿Qué tanto explica la longitud de la hoja la variación en 
 #######diámetro  de los vasos en la base de un árbol, con y 
 #####  sin consideració de la altura? 
-x01<-traits.db$stem.length.m
-x02<-traits.db$long.hoja.concenso
-y<-traits.db$VD.base.um
+stem.length<-traits.db$stem.length.m
+leaf.length<-traits.db$long.hoja.consenso
+VD.base<-traits.db$VD.base.um
 #plot con Y:diámetro basal, X02:long de hoja, X01:altura
 ##utilizando un modelo lineal
-lm_sinaltura<-lm(y ~ x02)
+lm_sinaltura<-lm(VD.base ~ stem.lenght)
 summary(lm_sinaltura)
-lm_conaltura<-lm(y ~ x02 + x01)
+lm_conaltura<-lm(VD.base ~ leaf.lenght + stem.lenght)
 summary(lm_conaltura)
 ## El r2 ajustado del modelo con altura es mayor que el modelo sin altura
 
 #graficamos
 par(mfrow = c(1,2))
-plot(x02, y)
+plot(leaf.length, VD.base)
 abline(lm_sinaltura)
-plot(x02 + x01, y)
+plot(leaf.length + stem.length, VD.base)
 abline(lm_conaltura)
 
 #evaluar la necesidad de transformación de variables
 #modelo; ajustarlo
 ##modelo lineal:
-lm_log_sinaltura<-lm(log (y) ~ log (x02))
+lm_log_sinaltura<-lm(log (VD.base) ~ log (leaf.length))
 summary(lm_log_sinaltura)
-lm_log_conaltura<-lm(log (y) ~ log (x02) + log (x01))
+lm_log_conaltura<-lm(log (VD.base) ~ log (leaf.length) + log (stem.length))
 summary(lm_log_conaltura)
 #graficamos
 par(mfrow = c(1,2))
-plot(log(x02) ~ log(y))
+plot(log(leaf.length), log(VD.base))
 abline(lm_log_sinaltura, col = "red")
-plot(log(x02) + log(x01), log (y))
+plot(log(leaf.length) + log(stem.length), log (VD.base))
 abline(lm_log_conaltura, col = "red")
 ## Los datos se distribuyen de manera menos aglomerada. Ademas el r2 ajustado de 
 # ambos modelos mejoran al transformarlos logaritmicamente.
@@ -254,51 +254,19 @@ plot(lm_log_conaltura)
 # ajustarse mejor con altura. 
 
 #checar si tenemos colinealidad
-db.cor <- data.frame(y, x01, x02)
+db.cor <- data.frame(VD.base, stem.length, leaf.length)
 ggpairs(db.cor)
-# No hay coliniaridad entre las variables altura de la planta y longitud de la hoja. 
-
-
-#evaluar la necesidad de transformación de variables
-#modelo; ajustarlo
-##modelo lineal:
-lm00<-lm(log (y) ~ log (x02))
-summary(lm00)
-lm01<-lm(log (y) ~ log (x02) + log (x01))
-summary(lm01)
-#graficamos
-par(mfrow = c(1,2))
-plot(log(x02) ~ log(y))
-abline(lm00)
-plot(log(x02) + log(x01), log (y))
-abline(lm01)
-
-#####Con base en las graficas generadas al cambiar el modelo, se observa un mejor ajuste####
-
-#checar cumplimiento de supuestos en residuos de modelos ajustados
-par(mfrow = c(2,2))
-plot(lm00)
-
-par(mfrow = c(2,2))
-plot(lm01)
-
-#checar si tenemos colinealidad  
-cotorro <- data.frame(y, x01, x02)
-library(GGally)
-ggpairs(cotorro)
+# No hay colinearidad entre las variables altura de la planta y longitud de la hoja. 
 
 
 ##### Modelo de variación en el diámetro de los conductos del ápice #####
 ## Karla, Mariana, Karen, Iván ##
 
-###Paso1. Cargar base
-base <- read.csv("BaseRasgos_UltraCompleta_30dic2020.csv")
-
 ####Paso2. Graficas. Y:diámetro apical, X1:long de hoja, X2:altura
 par(mfrow=c(1,3))
-plot(VD.tip.um ~ long.hoja.concenso, data=base)
-plot(VD.tip.um ~ stem.length.m, data=base)
-plot(long.hoja.concenso ~ stem.length.m, data=base)
+plot(VD.tip.um ~ long.hoja.consenso)
+plot(VD.tip.um ~ stem.length.m)
+plot(long.hoja.concenso ~ stem.length.m, data)
 
 ####Convertir a log. Mantener esta transformación, las gráficas se aprecian mejor así. 
 par(mfrow=c(1,3))
