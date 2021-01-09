@@ -51,6 +51,8 @@ colnames(traits.db) <- c("order", "family", "genus", "species.epithet", "stem.le
                          "max.length.blade", "min.width.blade", "max.width.blade",
                          "leaf.type", "length.leaf.cm", "width.leaf.cm")
 
+#Esta es una linea de prueba para mi rama#
+
 names(traits.db)
 ##verificar los niveles de los factores, rangos de variación de vars continuas
 factores<-factor(traits.db$leaf.type)
