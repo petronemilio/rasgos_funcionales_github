@@ -1,291 +1,173 @@
-#Cargando la base de datos
-traits <- read.csv("data/2020-12-02_Base_curso_rasgos.csv", header = T)
-names(traits) #revisar nombres#
-str(traits)
-
-
-####### Comandos para limpiar y crear la variable consenso ##########
-#Checar existencia de outliers y ver si es dato original o hubo algún error en su captura
-#datos faltantes, cuántos hay y cómo se están manejando
-#crear la variable consenso final (extraer datos de las dos fuentes y crear una nueva col donde se combinen para tener un único dato de long de hoja)
-
-####### Análisis exploratorios de las variables que vamos a considerar en nuestros modelos #########
-#Checar existencia de outliers y ver si es dato original o hubo algún error en su captura
-#tipo de variables que tenemos, que el reconocimiento sea correcto factor, character, num, logical,
-#verificar los niveles de los factores, rangos de variación de variables continuas
-
-## Creo que estás dos secciones les corresponderian al Equipo 1: Jess-Diego-Belén-EmmanuelMtz ##
-
-
-
-############## Análisis estadísticos descriptivos ################
-## Creo que está sección le corresponde al Equipo 2: Claudia, Brenda y Angélica, Emmanuel García 
-
-############# Modelos de regresión lineal ####################
-## Creo que en está sección ya podemos juntar los modelos del ápice y la base
-# Equipo 2: Claudia, Brenda y Angélica, Emmanuel García y Equipo 3: Karla, Mariana, Iván y Karen
-
-
-#Librerias
+#Libraries
 library(ggplot2)
 library(corrplot)
 library(Hmisc)
+library(dplyr)
 
-#Cargando la base de datos
-traits <- read.csv("2020_12_31_Base.csv")## Esta base no está en el directorio
-names(traits) #revisar nombres#
-str(traits)
-#######exploratory analyses ######
+# Load data.frame
+traits <- read.csv("data/df_traits.csv", header = T)
+names(traits) #check names
 
-#Checar existencia de outliers y corregir el problema
-#tipo de variables que tenemos, que el reconocimiento sea correcto
-#datos faltantes, cuántos hay y cómo se están manejando
+#### exploratory analyses ####
 
-#seleccionamos columnas de interes y renombramos
+# Select columns 
 traits.db<-traits[c(1:7,11:21)]
-names(traits.db)
-str(traits.db)
+names(traits.db) #check names
 colnames(traits.db) <- c("order", "family", "genus", "species.epithet", "stem.length.m",
                          "VD.base.um", "VD.tip.um", "min.length.leaf", "max.length.leaf",
                          "min.length.petiole","max.length.petiole","min.length.blade",
                          "max.length.blade", "min.width.blade", "max.width.blade",
-                         "leaf.type", "length.leaf.cm", "width.leaf.cm")
+                         "leaf.type", "length.leaf.cm", "width.leaf.cm") #new col names
 
-names(traits.db)
-##verificar los niveles de los factores, rangos de variación de vars continuas
-factores<-factor(traits.db$leaf.type)
-length(levels(factores))
+names(traits.db) #check names
 
-#combinamos la fila de epiteto y genero
+# Combine epithet and genus columns to create a species column
 traits.db$species <- paste(traits.db$genus, traits.db$species.epithet, sep = "_")
-names(traits.db)
+names(traits.db) #check names
 
-#filtrar por dato de hoja
+# Creating new columns for each different source. 
+traits.db["leng.leaf"]<-traits.db[17]  #1) total leaf length
+traits.db["leng.leaf.mean"]<-(traits.db[8]+traits.db[9])/2 
+  #2) Average leaf length
+traits.db["leng.lam.pet.mean"]<-(
+  (traits.db[10]+traits.db[11])/2)+((traits.db[12]+traits.db[13])/2) 
+  #3) Sum of the averages of blade and petiole
+names(traits.db) #check names
 
-traits.db <- subset(traits.db, leaf.type == "compound"|
-                      leaf.type=="simple")
+# Check the differences between different sources of leaf lenght information 
+traits.db$difference1_2 <- abs(traits.db$leng.leaf - traits.db$leng.leaf.mean)
+traits.db$difference1_3 <- abs(traits.db$leng.leaf - traits.db$leng.lam.pet.mean)
+traits.db$difference2_3 <- abs(traits.db$leng.leaf.mean - traits.db$leng.lam.pet.mean)
+names(traits.db) #check names
 
-#Así obtuvimos las columnas de interés (recuerda revisar los numeros de las columnas):#
-
-traits.db["long.hoja"]<-traits.db[17]  #1) longitud de hoja "cruda"
-traits.db["long.hoja.mean"]<-(traits.db[8]+traits.db[9])/2 #2) promedio de los mínimos y máximos de la longitud de la hoja
-traits.db["long.lam.pet.mean"]<-((traits.db[10]+traits.db[11])/2)+((traits.db[12]+traits.db[13])/2) #3) promedio de los mínimos y máximos de la lámina + peciolo
-
-#Descargamos y revisamos los valores faltantes y corregimos los errores de la base de datos
-#a partir de las diferencias entre fuentes de informacion
-write.csv(traits.db,"BaseRasgos_30dic2020.csv")
-
-#diferencias cuantitativas entre diferentes fuentes de informacion de las
-#longitudes de hoja
-
-traits.db$diferencia12 <- abs(traits.db$long.hoja - traits.db$long.hoja.mean)
-traits.db$diferencia13 <- abs(traits.db$long.hoja - traits.db$long.lam.pet.mean)
-traits.db$diferencia23 = abs(traits.db$long.hoja.mean - traits.db$long.lam.pet.mean)
-
-#calculamos el valor de mayor diferencia entre fuente 1 y 2
-traits.db[order(-traits.db$diferencia12),][1:10,] 
-
-#calculamos el valor de mayor diferencia entre fuente 1 y 3
-traits.db[order(-traits.db$diferencia13),][1:10,] 
-
-#Caculamos el valor de mayor diferencia entre fuente 2 y 3
-traits.db[order(-traits.db$diferencia23),][1:10,] 
-
-#graficamos para observar aquellas especies que estan mal ingresadas o son grandes
-#por naturaleza
-ggplot(traits.db, aes(x=(log10(long.hoja)), 
-                      y=(log10(long.lam.pet.mean)), label=species))+
+# Making a plot to check species with unusual values
+ggplot(traits.db, aes(x=(log10(leng.leaf)), 
+                      y=(log10(leng.lam.pet.mean)), label=species))+
   geom_point(size=1)+stat_smooth(formula= y~x, method = "lm")+
   geom_text(position = "identity", angle=25, size=2.5, alpha=0.8)
 
-ggplot(traits.db, aes(x=species, y=long.hoja))+
-  geom_boxplot()+theme(axis.text.x = element_text(angle = 90)) +
-  geom_label(label=traits.db$species, size=2.5)
 
-ggplot(traits.db, aes(x=species, y=long.hoja.mean))+
-  geom_boxplot()+theme(axis.text.x = element_text(angle = 90)) +
-  geom_label(label=traits.db$species, size=2.5)
+# Plotting for outliers
+dotchart(log10(traits.db$leng.leaf))
+dotchart(log10(traits.db$leng.leaf.mean))
+dotchart(log10(traits.db$leng.lam.pet.mean))
 
-ggplot(traits.db, aes(x=species, y=long.lam.pet.mean))+
-  geom_boxplot()+theme(axis.text.x = element_text(angle = 90)) + 
-  geom_label(label=traits.db$species, size=2.5)
+#### Creating final consensus variable ####
 
-#Graficacom un dotchart para ver la distribucion y asegurarnos que arreglamos 
-#los valores extraños
-dotchart(log(traits.db$long.hoja))
-dotchart(log(traits.db$long.lam.pet.mean))
+# Making a new col that includes the two principal sources of information
 
-#####creating final consensus variables####
-#extraer datos de las dos fuentes y crear una nueva col donde se combinen para tener un único dato de long de hoja
-#explorar la variable final de long de hoja final
-
-#Después de revisada y analizados los valores extraños, realizamos la columna consenso
-#hecha en tres pasos
-#Primero volvemos a cargar la base de datos pulida
-traits.db<-read.csv("data/BaseRasgos_30dic2020.csv")
-
-#paso 1
-#written argument:
 #If there is an NA in long.lam.pet.mean, then print long.hoja.mean; if thats 
 #not the case, then print long.lam.pet.mean
-
-traits.db$get.flyer <- with(traits.db, ifelse(is.na(long.lam.pet.mean),
-                                              long.hoja.mean, long.lam.pet.mean))
-
+traits.db$intermediate <- with(traits.db, ifelse(is.na(leng.lam.pet.mean),
+                                                 leng.leaf.mean, leng.lam.pet.mean))
 head(traits.db)
-#paso 2
-#written argument:
-#If there is an NA in long.lam.pet.mean as well as in long.hoja.mean,
-#then print long.hoja, if thats not the case, then print long.lam.pet.mean
 
-traits.db$get.flyer.1 <- with(traits.db, ifelse(is.na(long.lam.pet.mean) &
-                                                  is.na(long.hoja.mean),
-                                                long.hoja, long.lam.pet.mean))
+# Unite the new column with the last source of information
+# If there is an NA in intermediate then print leng.leaf else print intermediate
+traits.db$unit.leaf.leng <- with(traits.db, ifelse(!is.na(intermediate),
+                                               intermediate, leng.leaf))
 
+# Filtering species without data
+traits.db <- subset(traits.db, !is.na(unit.leaf.leng))
 
-
-#paso 3 y final
-traits.db$unique_col <- with(traits.db, ifelse(!is.na(get.flyer),
-                                               get.flyer, get.flyer.1))
-
-#Organizar nueva base de datos
+# Restructure the data.frame 
 names(traits.db)
 traits.db <- subset(traits.db, select=c("order","family","genus","species",
                                         "stem.length.m","VD.base.um",
                                         "VD.tip.um",
                                         "min.length.leaf", "max.length.leaf",
                                         "min.length.petiole", "max.length.petiole",
-                                        "min.length.blade", "max.length.blade", "leaf.type",
-                                        "long.hoja", "long.hoja.mean", "long.lam.pet.mean",
-                                        "unique_col"))
+                                        "min.length.blade", "max.length.blade", 
+                                        "leaf.type","leng.leaf", "leng.leaf.mean",
+                                        "leng.lam.pet.mean","unit.leaf.leng"))
 head(traits.db)
 
-colnames(traits.db) <- c("order","family","genus","species",
-                         "stem.length.m","VD.base.um",
-                         "VD.tip.um",
-                         "min.length.leaf", "max.length.leaf",
-                         "min.length.petiole", "max.length.petiole",
-                         "min.length.blade", "max.length.blade", "leaf.type",
-                         "long.hoja", "long.hoja.mean", "long.lam.pet.mean",
-                         "long.hoja.consenso")
+# Check for outliers in the new variable (unit.leaf.leng)
+dotchart(traits.db$unit.leaf.leng)
+# To compare between different orders of magnitude we transformed into log10. 
+dotchart(log10(traits.db$unit.leaf.leng))
+hist(log10(traits.db$unit.leaf.leng))
 
-#descargamos base depurada y con variable consenso#
+# Bivariate correlation analysis
+names(traits.db) #Check names
+leng.leaf.cor <-subset(traits.db[, c(5, 6, 7, 18)]) # Select variables of interest
 
-write.csv(traits.db, "data/BaseRasgos_UltraCompleta_30dic2020.csv")
+# Correlation matrix
+leng.leaf.matrix <- rcorr(as.matrix(leng.leaf.cor))
+leng.leaf.matrix$r # Correlation values between variables
 
-
-#revisamos los outlayers para comprobar que la revision a los valores extraños
-#hayan sido adecuada
-dotchart(log10(traits.db$long.hoja.consenso))
-hist(log10(traits.db$long.hoja.consenso))
-
-
-#Funciona - SE OBTIENE BASE PULIDA FINAL
-
-#análisis de correlación bivariada de todas las variables
-
-names(traits.db) #para ver las variables cuantitativas#
-long.hoja.cor<-subset(traits.db[, c(5, 6, 7, 18)]) #seleccionar variables de interes#
-
-#realizar matriz de correlación y graficarla#
-long.hoj.matrix = rcorr(as.matrix(long.hoja.cor))
-long.hoj.matrix$r
-
-corrplot(long.hoj.matrix$r, type = "upper", order = "hclust", 
-         tl.col = "black", tl.srt = 45)
-
-corrplot(long.hoj.matrix$r, type="upper", order="hclust", 
-         p.mat = long.hoj.matrix$P, sig.level = 0.05, bg="WHITE",
-         tl.col = "black", tl.srt = 45, pch.cex=2, outline=T, addCoef.col = T)
+# Plotting 
+corrplot(leng.leaf.matrix$r, type="upper", order="hclust", 
+         p.mat = leng.leaf.matrix$P, sig.level = 0.05, bg="WHITE",
+         tl.col = "black", tl.srt = 45, pch.cex=1, outline=T,
+         addCoef.col = T)
 
 
-##### Estadística descriptiva. Equipo: Claudia, Brenda y Angélica, Emmanuel García 
-#
-#llamamos a las librerias
-library(GGally)
+#### Descriptive statistics ####
+numeric_col <- select_if(traits, is.numeric)
+.min <- apply(numeric_col, 2, min, na.rm = TRUE)
+.max <- apply(numeric_col, 2, max, na.rm = TRUE)
+.mean <- apply(numeric_col, 2, mean, na.rm = TRUE)
+.median  <- apply(numeric_col, 2, median, na.rm = TRUE)
+.sd <-  apply(numeric_col, 2, sd, na.rm = TRUE)
+.var <- apply(numeric_col, 2, var, na.rm = TRUE)
+descriptive <- rbind(.min, .max, .mean, .median, .sd, .var)
 
-#####P1. ¿Qué tanto explica la longitud de la hoja la variación en 
-#######diámetro  de los vasos en la base de un árbol, con y 
-#####  sin consideració de la altura? 
-stem.length<-traits.db$stem.length.m
-leaf.length<-traits.db$long.hoja.consenso
-VD.base<-traits.db$VD.base.um
-#plot con Y:diámetro basal, X02:long de hoja, X01:altura
-##utilizando un modelo lineal
-lm_sinaltura<-lm(VD.base ~ stem.lenght)
-summary(lm_sinaltura)
-lm_conaltura<-lm(VD.base ~ leaf.lenght + stem.lenght)
-summary(lm_conaltura)
-## El r2 ajustado del modelo con altura es mayor que el modelo sin altura
-
-#graficamos
-par(mfrow = c(1,2))
-plot(leaf.length, VD.base)
-abline(lm_sinaltura)
-plot(leaf.length + stem.length, VD.base)
-abline(lm_conaltura)
-
-#evaluar la necesidad de transformación de variables
-#modelo; ajustarlo
-##modelo lineal:
-lm_log_sinaltura<-lm(log (VD.base) ~ log (leaf.length))
-summary(lm_log_sinaltura)
-lm_log_conaltura<-lm(log (VD.base) ~ log (leaf.length) + log (stem.length))
-summary(lm_log_conaltura)
-#graficamos
-par(mfrow = c(1,2))
-plot(log(leaf.length), log(VD.base))
-abline(lm_log_sinaltura, col = "red")
-plot(log(leaf.length) + log(stem.length), log (VD.base))
-abline(lm_log_conaltura, col = "red")
-## Los datos se distribuyen de manera menos aglomerada. Ademas el r2 ajustado de 
-# ambos modelos mejoran al transformarlos logaritmicamente.
-# Entonces se concluye que los datos medidos en escalas diferentes son mas
-# comparables entre si. 
+#### Models ####
+# Plotting stem base 
+plot(traits.db$VD.base.um ~ traits.db$unit.leaf.leng)
+plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng))
+# To compare between different orders of magnitude we transformed into log10.
 
 
-#checar cumplimiento de supuestos en residuos de modelos ajustados
+#### DISCUSION EN CLASE. ELIMINAR 0'S ####
+traits.db <- subset(traits.db, unit.leaf.leng != 0)
+# # # - # # # - # # #
+
+
+# Stem base without consider stem length.
+abline(lm_vdbase.leaf.log, col = "red", lwd = 2)
+lm_vdbase.leaf.log <-lm(log10(traits.db$VD.base.um)
+                        ~ log10(traits.db$unit.leaf.leng))
+anova(lm_vdbase.leaf.log)
+summary(lm_vdbase.leaf.log)
+
+
+# Stem base considering stem length
+abline(lm_vdbase.leaf.log.stem, col = "red", lwd = 2)
+plot(log10(traits.db$VD.base.um) ~ log10(traits.db$stem.length.m))
+lm_vdbase.leaf.log.stem <-lm(log10(traits.db$VD.base.um) ~
+                               log10(traits.db$unit.leaf.leng) 
+                             + log10(traits.db$stem.length.m))
+anova(lm_vdbase.leaf.log.stem)
+summary(lm_vdbase.leaf.log.stem)
+
+
+# Plotting residuals
 par(mfrow = c(2,2))
-plot(lm_log_sinaltura)
-
+plot(lm_vdbase.leaf.log)
 par(mfrow = c(2,2))
-plot(lm_log_conaltura)
-# En ambos casos se cumple el supuesto de residuos. Sin embargo, los residuos parecen
-# ajustarse mejor con altura. 
+plot(lm_vdbase.leaf.log.stem)
 
-#checar si tenemos colinealidad
-db.cor <- data.frame(VD.base, stem.length, leaf.length)
-ggpairs(db.cor)
-# No hay colinearidad entre las variables altura de la planta y longitud de la hoja. 
+# Stem tip without consider stem length
+abline(lm_vdtip.leaf.log, col = "red", lwd = 2)
+plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng))
+lm_vdtip.leaf.log <-lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng))
+anova(lm_vdtip.leaf.log)
+summary(lm_vdtip.leaf.log)
 
 
-##### Modelo de variación en el diámetro de los conductos del ápice #####
-## Karla, Mariana, Karen, Iván ##
+# Stem tip considering stem length
+abline(lm_vdtip.leaf.log.stem, col = "red", lwd = 2)
+plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m))
+lm_vdtip.leaf.log.stem <-lm(log10(traits.db$VD.tip.um) ~
+                              log10(traits.db$unit.leaf.leng) 
+                            + log10(traits.db$stem.length.m))
+anova(lm_vdtip.leaf.log.stem)
+summary(lm_vdtip.leaf.log.stem)
 
-####Paso2. Graficas. Y:diámetro apical, X1:long de hoja, X2:altura
-par(mfrow=c(1,3))
-plot(VD.tip.um ~ long.hoja.consenso)
-plot(VD.tip.um ~ stem.length.m)
-plot(long.hoja.concenso ~ stem.length.m, data)
-
-####Convertir a log. Mantener esta transformación, las gráficas se aprecian mejor así. 
-par(mfrow=c(1,3))
-plot(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
-plot(log(VD.tip.um) ~ log(stem.length.m), data=base)
-plot(log(long.hoja.concenso) ~ log(stem.length.m), data=base)
-
-####P3. ¿Qué tanto explica la longitud de la hoja la variación en el diámetro  de los vasos en el ápice de un árbol, 
-#con y sin consideración de la altura?
-
-model1<- lm(log(VD.tip.um) ~ log(long.hoja.concenso), data=base)
-summary(model1)
-model2<- lm(log(VD.tip.um) ~ log(long.hoja.concenso)+log(stem.length.m), data=base)
-summary(model2)
-model3<-lm(log(VD.tip.um) ~ log(long.hoja.concenso) * log(stem.length.m), data=base)
-summary(model3)
-
-####Checar cumplimiento de supuestos en residuos de modelos ajustados
-par(mfrow=c(2,2))
-plot(model1)
-plot(model2)
-plot(model3)
+# Plotting residuals
+par(mfrow = c(2,2))
+plot(lm_vdtip.leaf.log)
+par(mfrow = c(2,2))
+plot(lm_vdtip.leaf.log.stem)
