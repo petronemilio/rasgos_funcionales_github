@@ -67,6 +67,10 @@ head(traits.db)
 traits.db$unit.leaf.leng <- with(traits.db, ifelse(!is.na(intermediate),
                                                intermediate, leng.leaf))
 
+## Add new col whit or whitout leaf
+traits.db$leaf.presence <- with(traits.db, ifelse(leaf.type != "aphyllous", TRUE, FALSE))
+
+
 # Filtering species without data
 traits.db <- subset(traits.db, !is.na(unit.leaf.leng))
 
@@ -79,7 +83,7 @@ traits.db <- subset(traits.db, select=c("order","family","genus","species",
                                         "min.length.petiole", "max.length.petiole",
                                         "min.length.blade", "max.length.blade", 
                                         "leaf.type","leng.leaf", "leng.leaf.mean",
-                                        "leng.lam.pet.mean","unit.leaf.leng"))
+                                        "leng.lam.pet.mean", "unit.leaf.leng", "leaf.presence"))
 head(traits.db)
 
 # Check for outliers in the new variable (unit.leaf.leng)
@@ -134,14 +138,25 @@ summary(lm_vdbase.leaf.log)
 
 
 # Stem base considering stem length
-abline(lm_vdbase.leaf.log.stem, col = "red", lwd = 2)
 plot(log10(traits.db$VD.base.um) ~ log10(traits.db$stem.length.m))
+
+# Multiplicative model
+lm_vdbase.leaf.log.stem.M <-lm(log10(traits.db$VD.base.um) ~
+                               log10(traits.db$unit.leaf.leng) 
+                             * log10(traits.db$stem.length.m))
+
+anova(lm_vdbase.leaf.log.stem.M)
+summary(lm_vdbase.leaf.log.stem.M)
+
+
+#Aditive Model
 lm_vdbase.leaf.log.stem <-lm(log10(traits.db$VD.base.um) ~
                                log10(traits.db$unit.leaf.leng) 
                              + log10(traits.db$stem.length.m))
 anova(lm_vdbase.leaf.log.stem)
 summary(lm_vdbase.leaf.log.stem)
 
+abline(lm_vdbase.leaf.log.stem, col = "red", lwd = 2)
 
 # Plotting residuals
 par(mfrow = c(2,2))
@@ -158,16 +173,84 @@ summary(lm_vdtip.leaf.log)
 
 
 # Stem tip considering stem length
-abline(lm_vdtip.leaf.log.stem, col = "red", lwd = 2)
 plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m))
+
+# Multiplicative model 
+lm_vdtip.leaf.log.stem.M <-lm(log10(traits.db$VD.tip.um) ~
+                                log10(traits.db$unit.leaf.leng) 
+                              * log10(traits.db$stem.length.m))
+anova(lm_vdtip.leaf.log.stem.M)
+summary(lm_vdtip.leaf.log.stem.M)
+
+
+#Aditive Model
 lm_vdtip.leaf.log.stem <-lm(log10(traits.db$VD.tip.um) ~
                               log10(traits.db$unit.leaf.leng) 
                             + log10(traits.db$stem.length.m))
 anova(lm_vdtip.leaf.log.stem)
 summary(lm_vdtip.leaf.log.stem)
 
+abline(lm_vdtip.leaf.log.stem, col = "red", lwd = 2) ## Hecho con el Modelo aditivo discutir en clase
+
 # Plotting residuals
 par(mfrow = c(2,2))
 plot(lm_vdtip.leaf.log)
 par(mfrow = c(2,2))
 plot(lm_vdtip.leaf.log.stem)
+
+
+# Presence leaf
+#Lo hicimos pero creemos que NO es informativo, discutir en clase. 
+lm_leaf.presence <- lm(log10(traits.db$VD.tip.um) ~
+                              log10(traits.db$unit.leaf.leng) 
+                            + log10(traits.db$stem.length.m)+ traits.db$leaf.presence)
+anova(lm_leaf.presence)
+summary(lm_leaf.presence)
+
+lm_leaf.presence.M <- lm(log10(traits.db$VD.tip.um) ~
+                         log10(traits.db$unit.leaf.leng) 
+                       * log10(traits.db$stem.length.m) * traits.db$leaf.presence)
+
+anova(lm_leaf.presence.M)
+summary(lm_leaf.presence.M)
+
+
+#Type leaf
+# Creemos que no es informativo, discutir en clase
+traits.db.2 <- subset(traits.db, leaf.type!= "aphyllous")
+
+lm_leaf.type <- lm(log10(traits.db.2$VD.tip.um) ~
+                         log10(traits.db.2$unit.leaf.leng) 
+                       + log10(traits.db.2$stem.length.m)+ traits.db.2$leaf.type)
+anova(lm_leaf.type)
+summary(lm_leaf.type)
+
+lm_leaf.type.M <- lm(log10(traits.db.2$VD.tip.um) ~
+                       log10(traits.db.2$unit.leaf.leng) 
+                     * log10(traits.db.2$stem.length.m) * traits.db.2$leaf.type)
+
+anova(lm_leaf.type.M)
+summary(lm_leaf.type.M)
+
+
+##Fin##
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
