@@ -101,14 +101,18 @@ leng.leaf.matrix <- rcorr(as.matrix(leng.leaf.cor))
 leng.leaf.matrix$r # Correlation values between variables
 
 # Plotting 
+
+pdf("Results/Figura2.pdf", height = 8, width = 8) # Para guardar en PDF
+png("Results/Figura2.png", height = 480, width = 480) # Para guardar en PNG
+
 corrplot(leng.leaf.matrix$r, type="upper", order="hclust", 
          p.mat = leng.leaf.matrix$P, sig.level = 0.05, bg="WHITE",
          tl.col = "black", tl.srt = 45, pch.cex=1, outline=T,
          addCoef.col = T)
-
+dev.off()
 
 #### Descriptive statistics ####
-numeric_col <- select_if(traits, is.numeric)
+numeric_col <- select_if(traits.db, is.numeric)
 .min <- apply(numeric_col, 2, min, na.rm = TRUE)
 .max <- apply(numeric_col, 2, max, na.rm = TRUE)
 .mean <- apply(numeric_col, 2, mean, na.rm = TRUE)
@@ -117,60 +121,31 @@ numeric_col <- select_if(traits, is.numeric)
 .var <- apply(numeric_col, 2, var, na.rm = TRUE)
 descriptive <- rbind(.min, .max, .mean, .median, .sd, .var)
 
-#### Models ####
-# Plotting stem base 
-plot(traits.db$VD.base.um ~ traits.db$unit.leaf.leng)
-plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng))
-# To compare between different orders of magnitude we transformed into log10.
+tabla1 <- as.data.frame(descriptive[,c(3,2,13,1)])
+write.table(tabla1, "Results/tabla1.csv")
 
+#### Models ####
+# To compare between different orders of magnitude we transformed into log10.
 
 #### DISCUSION EN CLASE. ELIMINAR 0'S ####
 traits.db <- subset(traits.db, unit.leaf.leng != 0)
 # # # - # # # - # # #
 
-
-# Stem base without consider stem length.
-abline(lm_vdbase.leaf.log, col = "red", lwd = 2)
-lm_vdbase.leaf.log <-lm(log10(traits.db$VD.base.um)
-                        ~ log10(traits.db$unit.leaf.leng))
-anova(lm_vdbase.leaf.log)
-summary(lm_vdbase.leaf.log)
-
-
-# Stem base considering stem length
-plot(log10(traits.db$VD.base.um) ~ log10(traits.db$stem.length.m))
-
-# Multiplicative model
-lm_vdbase.leaf.log.stem.M <-lm(log10(traits.db$VD.base.um) ~
-                               log10(traits.db$unit.leaf.leng) 
-                             * log10(traits.db$stem.length.m))
-
-anova(lm_vdbase.leaf.log.stem.M)
-summary(lm_vdbase.leaf.log.stem.M)
-
-
-#Aditive Model
-lm_vdbase.leaf.log.stem <-lm(log10(traits.db$VD.base.um) ~
-                               log10(traits.db$unit.leaf.leng) 
-                             + log10(traits.db$stem.length.m))
-anova(lm_vdbase.leaf.log.stem)
-summary(lm_vdbase.leaf.log.stem)
-
-abline(lm_vdbase.leaf.log.stem, col = "red", lwd = 2)
-
-# Plotting residuals
-par(mfrow = c(2,2))
-plot(lm_vdbase.leaf.log)
-par(mfrow = c(2,2))
-plot(lm_vdbase.leaf.log.stem)
-
 # Stem tip without consider stem length
-abline(lm_vdtip.leaf.log, col = "red", lwd = 2)
 plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng))
 lm_vdtip.leaf.log <-lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng))
-anova(lm_vdtip.leaf.log)
 summary(lm_vdtip.leaf.log)
+anova(lm_vdtip.leaf.log)
+abline(lm_vdtip.leaf.log, col = "red", lwd = 2)
 
+
+# Stem base without consider stem length.
+plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng))
+lm_vdbase.leaf.log <-lm(log10(traits.db$VD.base.um)
+                        ~ log10(traits.db$unit.leaf.leng))
+summary(lm_vdbase.leaf.log)
+anova(lm_vdbase.leaf.log)
+abline(lm_vdbase.leaf.log, col = "red", lwd = 2)
 
 # Stem tip considering stem length
 plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m))
@@ -179,24 +154,93 @@ plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m))
 lm_vdtip.leaf.log.stem.M <-lm(log10(traits.db$VD.tip.um) ~
                                 log10(traits.db$unit.leaf.leng) 
                               * log10(traits.db$stem.length.m))
-anova(lm_vdtip.leaf.log.stem.M)
 summary(lm_vdtip.leaf.log.stem.M)
-
+anova(lm_vdtip.leaf.log.stem.M)
 
 #Aditive Model
 lm_vdtip.leaf.log.stem <-lm(log10(traits.db$VD.tip.um) ~
                               log10(traits.db$unit.leaf.leng) 
                             + log10(traits.db$stem.length.m))
-anova(lm_vdtip.leaf.log.stem)
 summary(lm_vdtip.leaf.log.stem)
+anova(lm_vdtip.leaf.log.stem)
 
 abline(lm_vdtip.leaf.log.stem, col = "red", lwd = 2) ## Hecho con el Modelo aditivo discutir en clase
+
+# Stem base considering stem length
+plot(log10(traits.db$VD.base.um) ~ log10(traits.db$stem.length.m))
+
+# Multiplicative model
+lm_vdbase.leaf.log.stem.M <-lm(log10(traits.db$VD.base.um) ~
+                               log10(traits.db$unit.leaf.leng) 
+                             * log10(traits.db$stem.length.m))
+summary(lm_vdbase.leaf.log.stem.M)
+anova(lm_vdbase.leaf.log.stem.M)
+
+#Aditive Model
+lm_vdbase.leaf.log.stem <-lm(log10(traits.db$VD.base.um) ~
+                               log10(traits.db$unit.leaf.leng) 
+                             + log10(traits.db$stem.length.m))
+summary(lm_vdbase.leaf.log.stem)
+anova(lm_vdbase.leaf.log.stem)
+abline(lm_vdbase.leaf.log.stem, col = "red", lwd = 2)
+
+
+#### Falta poner comandos para generar la tabla 2 (parámetros de los modelos)
+
+# Plotting residuals
+par(mfrow = c(2,2))
+plot(lm_vdbase.leaf.log)
+par(mfrow = c(2,2))
+plot(lm_vdbase.leaf.log.stem)
 
 # Plotting residuals
 par(mfrow = c(2,2))
 plot(lm_vdtip.leaf.log)
 par(mfrow = c(2,2))
 plot(lm_vdtip.leaf.log.stem)
+
+#### Figura 3 ####
+
+png("Results/Figura3.png", height = 480, width = 480) # Para guardar en PNG
+
+par(mfrow = c(2,2))
+plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng),
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.tip.um)")
+
+abline(lm_vdtip.leaf.log, col = "red", lwd = 2)
+
+plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng),
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.base.um)")
+
+abline(lm_vdbase.leaf.log, col = "red", lwd = 2)
+
+plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng),
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.tip.um)") # Discutir cómo se van a graficar las últimas dos
+
+#abline(0.994, 0.14, col = "black", lwd = 2)
+#abline(0.994, 0.054, col = "red", lwd = 2)
+#abline(0.994, 0.88, col =  "blue", lwd = 2)
+
+#plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng),
+     #xlab = "log10(leaf.length.m)", ylab = "log10(VD.tip.um)") # Discutir cómo se van a graficar las últimas dos
+
+#abline(0.96, 0.18, col = "black", lwd = 2)
+#abline(0.96, 0.13, col = "red", lwd = 2)
+
+plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng),
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.base.um)")
+
+#abline(1.41, 0.06, col = "black", lwd = 2)
+#abline(1.41, 0.36, col = "red", lwd = 2)
+#abline(1.41, 0.04, col =  "blue", lwd = 2)
+
+#plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng),
+     #xlab = "log10(leaf.length.m)", ylab = "log10(VD.base.um)")
+
+#abline(1.39, 0.086, col = "black", lwd = 2)
+#abline(1.39, 0.4, col = "red", lwd = 2)
+
+dev.off()
 
 
 # Presence leaf
@@ -234,23 +278,3 @@ summary(lm_leaf.type.M)
 
 
 ##Fin##
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
