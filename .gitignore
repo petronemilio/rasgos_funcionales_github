@@ -3,3 +3,4 @@ meta/*.jpeg
 *.html
 GithubIntroduction/*.html
 .Rhistory
+.RData
