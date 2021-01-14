@@ -205,17 +205,17 @@ png("Results/Figura3.png", height = 480, width = 480) # Para guardar en PNG
 
 par(mfrow = c(2,2))
 plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng),
-     #xlab = "log10(leaf.length.m)", ylab = "log10(VD.tip.um)")
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.tip.um)")
 
 abline(lm_vdtip.leaf.log, col = "red", lwd = 2)
 
 plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng),
-     #xlab = "log10(leaf.length.m)", ylab = "log10(VD.base.um)")
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.base.um)")
 
 abline(lm_vdbase.leaf.log, col = "red", lwd = 2)
 
 plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng),
-     #xlab = "log10(leaf.length.m)", ylab = "log10(VD.tip.um)") # Discutir cómo se van a graficar las últimas dos
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.tip.um)") # Discutir cómo se van a graficar las últimas dos
 
 #abline(0.994, 0.14, col = "black", lwd = 2)
 #abline(0.994, 0.054, col = "red", lwd = 2)
@@ -228,7 +228,7 @@ plot(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng),
 #abline(0.96, 0.13, col = "red", lwd = 2)
 
 plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng),
-     #xlab = "log10(leaf.length.m)", ylab = "log10(VD.base.um)")
+     xlab = "log10(leaf.length.m)", ylab = "log10(VD.base.um)")
 
 #abline(1.41, 0.06, col = "black", lwd = 2)
 #abline(1.41, 0.36, col = "red", lwd = 2)
