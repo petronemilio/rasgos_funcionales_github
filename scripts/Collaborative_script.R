@@ -3,7 +3,7 @@ library(ggplot2)
 library(corrplot)
 library(Hmisc)
 library(dplyr)
-
+library(stargazer)
 # Load data.frame
 traits <- read.csv("data/df_traits.csv", header = T)
 names(traits) #check names
@@ -111,6 +111,8 @@ corrplot(leng.leaf.matrix$r, type="upper", order="hclust",
          addCoef.col = T)
 dev.off()
 
+rm(leng.leaf.cor, leng.leaf.matrix)
+
 #### Descriptive statistics ####
 numeric_col <- select_if(traits.db, is.numeric)
 .min <- apply(numeric_col, 2, min, na.rm = TRUE)
@@ -126,8 +128,11 @@ write.table(tabla1, "Results/tabla1.csv")
 
 #### Models ####
 # To compare between different orders of magnitude we transformed into log10.
-
-#### DISCUSION EN CLASE. ELIMINAR 0'S ####
+# First models are run without species without leaves.
+#### ELIMINAR 0'S ####
+#Recomiendo guardar una base para especies sin hojas y correr con esa los modelos
+#que van en esta sección. Agregar un na clave al nombre de 
+#los modelos para que se entienda que son sin considerar afilas.
 traits.db <- subset(traits.db, unit.leaf.leng != 0)
 # # # - # # # - # # #
 
@@ -243,7 +248,9 @@ plot(log10(traits.db$VD.base.um) ~ log10(traits.db$unit.leaf.leng),
 dev.off()
 
 
-# Presence leaf
+##### Aquí agregar repetir las variables de los modelos de arriba pero considerando agregando la 
+# constante. Con traits.db sería suficiente
+#Presence leaf
 #Lo hicimos pero creemos que NO es informativo, discutir en clase. 
 lm_leaf.presence <- lm(log10(traits.db$VD.tip.um) ~
                               log10(traits.db$unit.leaf.leng) 
@@ -260,7 +267,8 @@ summary(lm_leaf.presence.M)
 
 
 #Type leaf
-# Creemos que no es informativo, discutir en clase
+# Creemos que no es informativo, discutir en clase.
+#Aquí están quitando a las afilas. 
 traits.db.2 <- subset(traits.db, leaf.type!= "aphyllous")
 
 lm_leaf.type <- lm(log10(traits.db.2$VD.tip.um) ~
