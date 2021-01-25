@@ -132,7 +132,7 @@ write.table(table1, "Results/tabla1.csv")
 
 rm(numeric_col, descriptive)
 
-#### Models ####
+#### Models with aphyllus ####
 # To compare between different orders of magnitude we transformed into log10.
 # As the log10 of 0 is INF, we add +1 (constant) to unit.leaf.leng
 
@@ -251,8 +251,8 @@ abline(lm_base_leaf.presence, lwd = 2)
 #lm_tip_leaf.type.M <- lm(log10(traits.db$VD.tip.um) ~
 #                           log10(traits.db$unit.leaf.leng+1) 
 #                         * log10(traits.db$stem.length.m) * traits.db$leaf.type)
-#summary(lm_leaf.presence.M)
-#anova(lm_leaf.presence.M)
+#summary(lm_tip_leaf.type.M)
+#anova(lm_tip_leaf.type.M)
 # There's no relation between the three variables nor with leaf.type and
 # any other variable
 
@@ -287,38 +287,136 @@ abline(lm_base_leaf.type, lwd = 2)
 
 #Note that nor considering leaf presence nor leaf type the r^2 increases.
 
+#### Models without aphyllus ####
+# As aphyllus might be troublesome to deal with in some models
+# we also made some models without them.
+
+traits.leafy <- subset(traits.db, leaf.type != "aphyllous")
+
+##Models without consider stem length
+# Stem TIP without consider stem length: r^2: 0.31.
+plot(log10(traits.leafy$VD.tip.um) ~ log10(traits.leafy$unit.leaf.leng))
+lm_vdtip.leaf.log.a <-lm(log10(traits.leafy$VD.tip.um) ~ log10(traits.leafy$unit.leaf.leng))
+summary(lm_vdtip.leaf.log.a)
+anova(lm_vdtip.leaf.log.a)
+abline(lm_vdtip.leaf.log.a, col = "red", lwd = 2)
+
+
+# Stem BASE without consider stem length: r^2: 0.25.
+plot(log10(traits.leafy$VD.base.um) ~ log10(traits.leafy$unit.leaf.leng))
+lm_vdbase.leaf.log.a <-lm(log10(traits.leafy$VD.base.um)
+                        ~ log10(traits.leafy$unit.leaf.leng))
+summary(lm_vdbase.leaf.log.a)
+anova(lm_vdbase.leaf.log.a)
+abline(lm_vdbase.leaf.log.a, col = "red", lwd = 2)
+
+## Models considering stem length
+# Stem TIP considering stem length
+plot(log10(traits.leafy$VD.tip.um) ~ log10(traits.leafy$stem.length.m))
+
+# Multiplicative model: R^2 = 0.39
+lm_vdtip.leaf.log.stem.M.a <-lm(log10(traits.leafy$VD.tip.um) ~
+                                log10(traits.leafy$unit.leaf.leng) 
+                              * log10(traits.leafy$stem.length.m))
+summary(lm_vdtip.leaf.log.stem.M.a)
+anova(lm_vdtip.leaf.log.stem.M.a)
+# As it is proven that a relation betwwen unit.leaf.leng and stem.length.m
+# does exist, it is not necessary to create an additive model.
+
+#Aditive Model, not used.
+#lm_vdtip.leaf.log.stem.a <-lm(log10(traits.leafy$VD.tip.um) ~
+#                             log10(traits.leafy$unit.leaf.leng) 
+#                          + log10(traits.leafy$stem.length.m))
+#summary(lm_vdtip.leaf.log.stem.a)
+#anova(lm_vdtip.leaf.log.stem.a)
+
+abline(lm_vdtip.leaf.log.stem.M.a, col = "red", lwd = 2) # multiplicative model
+
+# Stem BASE considering stem length
+plot(log10(traits.leafy$VD.base.um) ~ log10(traits.leafy$stem.length.m))
+
+# Multiplicative model Not used.
+# lm_vdbase.leaf.log.stem.M.a <-lm(log10(traits.leafy$VD.base.um) ~
+#                                 log10(traits.leafy$unit.leaf.leng) 
+#                               * log10(traits.leafy$stem.length.m))
+#summary(lm_vdbase.leaf.log.stem.M.a)
+#anova(lm_vdbase.leaf.log.stem.M.a)
+# As it is proven that a relation between unit.leaf.leng and stem.length.m
+# don't exist, we make an additive model
+
+#Aditive Model: r^2: 0.64
+lm_vdbase.leaf.log.stem.a <-lm(log10(traits.leafy$VD.base.um) ~
+                               log10(traits.leafy$unit.leaf.leng) 
+                             + log10(traits.leafy$stem.length.m))
+summary(lm_vdbase.leaf.log.stem.a)
+anova(lm_vdbase.leaf.log.stem.a)
+
+
+abline(lm_vdbase.leaf.log.stem.M.a, col = "red", lwd = 2) # multiplicative model
+
+## Models considering stem length and leaf type
+
+# TIP
+
+# Multiplicative Not used.
+# lm_tip_leaf.type.M.a <- lm(log10(traits.leafy$VD.tip.um) ~
+#                          log10(traits.leafy$unit.leaf.leng) 
+#                         * log10(traits.leafy$stem.length.m) * traits.leafy$leaf.type)
+# summary(lm_tip_leaf.type.M.a)
+# anova(lm_tip_leaf.type.M.a)
+# There's no relation between the three variables nor with leaf.type and
+# any other variable
+
+#Additive not used. 
+# lm_tip_leaf.type.a<- lm(log10(traits.leafy$VD.tip.um) ~
+#                       log10(traits.leafy$unit.leaf.leng) 
+#                     + log10(traits.leafy$stem.length.m)+ traits.leafy$leaf.type)
+#summary(lm_tip_leaf.type.a)
+#anova(lm_tip_leaf.type.a)
+#abline(lm_tip_leaf.type.a, col = "red", lwd = 2)
+# The probabily (p-value) of the leaf.type variable to be explained by just randomess is too high 
+# to accept the Ha.
+
+# BASE
+
+# Plot
+#plot(log10(traits.leafy$VD.base.um) ~ log10(traits.leafy$stem.length.m))
+# Multiplicative Not used.
+# lm_base_leaf.type.M.a <- lm(log10(traits.leafy$VD.base.um) ~
+#                           log10(traits.leafy$unit.leaf.leng) 
+#                         * log10(traits.leafy$stem.length.m) * traits.leafy$leaf.type)
+#summary(lm_base_leaf.type.M.a)
+#anova(lm_base_leaf.type.M.a)
+# There's no relation between the three variables nor with leaf.type and
+# any other variable
+
+#Additive: R^2 not used.
+#lm_base_leaf.type.a <- lm(log10(traits.leafy$VD.base.um) ~
+#                          log10(traits.leafy$unit.leaf.leng) 
+#                        + log10(traits.leafy$stem.length.m)+ traits.leafy$leaf.type)
+#summary(lm_base_leaf.type.a)
+#anova(lm_base_leaf.type.a)
+#abline(lm_base_leaf.type.a, lwd = 2)
+# The probability that the variability in leaf.type might be explained by randomess is
+# to high to reject H0
+
 #### Residuals ####
 # Stem TIP without consider stem length
 par(mfrow = c(2,2))
-plot(lm_vdtip.leaf.log)
+plot(lm_vdtip.leaf.log.a)
 
 # Stem BASE without consider stem length
 par(mfrow = c(2,2))
-plot(lm_vdbase.leaf.log)
+plot(lm_vdbase.leaf.log.a)
 
 # Stem TIP considering stem length (Multiplicative)
 par(mfrow = c(2,2))
-plot(lm_vdtip.leaf.log.stem.M)
+plot(lm_vdtip.leaf.log.stem.M.a)
 
-# Stem BASE considering stem length (Multiplicative)
+# Stem BASE considering stem length (Additive)
 par(mfrow = c(2,2))
-plot(lm_vdbase.leaf.log.stem.M)
+plot(lm_vdbase.leaf.log.stem.a)
 
-# Stem TIP considering stem length and leaf presence (Additive)
-par(mfrow = c(2,2))
-plot(lm_tip_leaf.presence) # Cook's d' is high. Higher points are Cactii
-
-# Stem BASE considering stem length and leaf presence (Additive)
-par(mfrow = c(2,2))
-plot(lm_base_leaf.presence) # Cook's d' is high. Higher points are Cactii
-
-# Stem TIP considering stem length and leaf type (Additive)
-par(mfrow = c(2,2))
-plot(lm_tip_leaf.type) # Cook's d' is high. Higher points are Cactii
-
-# Stem BASE considering stem length and leaf type (Additive)
-par(mfrow = c(2,2))
-plot(lm_base_leaf.type) # Cook's d' is high. Higher points are Cactii
 
 dev.off()
 
