@@ -130,11 +130,13 @@ descriptive <- rbind(.min, .max, .mean, .median, .sd, .var)
 table1 <- as.data.frame(descriptive[,c(3,2,13,1)])
 write.table(table1, "Results/tabla1.csv")
 
+
 rm(numeric_col, descriptive)
 
 #### Models with aphyllus ####
 # To compare between different orders of magnitude we transformed into log10.
 # As the log10 of 0 is INF, we add +1 (constant) to unit.leaf.leng
+
 
 ##Models without consider stem length
 # Stem TIP without consider stem length: r^2: 0.29.
@@ -483,3 +485,4 @@ out = "Results/table2.html"
 
 #abline(1.39, 0.086, col = "black", lwd = 2)
 #abline(1.39, 0.4, col = "red", lwd = 2)
+
