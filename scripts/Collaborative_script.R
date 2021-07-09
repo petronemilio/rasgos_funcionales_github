@@ -82,7 +82,43 @@ plot(log10(traits.db$VD.tip.um)~ log10(traits.db$area))
 lm.vdtip.leafarea <- lm(log10(traits.db$VD.tip.um)~ log10(traits.db$area)) 
 summary(lm.vdtip.leafarea)
 abline(lm.vdtip.leafarea, col = "red", lwd = 2)
-# Filtering species without data
+########Loading data from sean
+macquarie.data <- read.csv("data/macquarie_vessel_diameter_leaf_size.csv")
+macquarie.data.temp <- macquarie.data
+##########
+##### Hacer una dataframe de las dos bases para comparar datos.
+olson.gleason <- traits.db %>% dplyr::select(family,genus,species,stem.length.m,
+                                             VD.tip.um,unit.leaf.leng,area)
+#add column identifier
+olson.gleason <- cbind(olson.gleason, rep("Olson",nrow(olson.gleason)))
+colnames(olson.gleason)[8] <- "Developer"
+#
+macquarie.data <- macquarie.data %>% dplyr::select(Family,Genus,
+                                                   Species,max_ht..m.,vessel.dia..um.,
+                                                   elip_leaf_length_cm,leaf.size..cm2.)
+#add column identifier
+macquarie.data <- cbind(macquarie.data,rep("Gleason",nrow(macquarie.data)))
+colnames(macquarie.data) <- c("family","genus","species","stem.length.m","VD.tip.um","unit.leaf.leng","area","Developer")
+
+olson.gleason <- rbind(olson.gleason,macquarie.data)
+#
+plot(log10(olson.gleason$unit.leaf.leng),log10(olson.gleason$VD.tip.um), pch=16,
+     xlab = expression(paste("log"[10]," Leaf length (cm)"))
+     , ylab = expression(paste("log"[10], " Tip Vessel diameter (", mu,"m)")))
+points(log10(olson.gleason$unit.leaf.leng[olson.gleason$Developer=="Gleason"]),
+       log10(olson.gleason$VD.tip.um[olson.gleason$Developer=="Gleason"]),col="red",pch=16)
+
+#
+lm.vdtip.leaf.both<- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$unit.leaf.leng))
+summary(lm.vdtip.leaf.both)
+#
+lm.vdtip.leafarea <- lm(log10(olson.gleason$VD.tip.um)~ log10(olson.gleason$area)) 
+summary(lm.vdtip.leafarea)
+plot(log10(olson.gleason$VD.tip.um)~ log10(olson.gleason$area))
+points(log10(olson.gleason$area[olson.gleason$Developer=="Gleason"]),
+       log10(olson.gleason$VD.tip.um[olson.gleason$Developer=="Gleason"]),col="red")
+
+###### Filtering species without data#####
 traits.db <- subset(traits.db, !is.na(unit.leaf.leng))
 
 # Restructure the data.frame 
