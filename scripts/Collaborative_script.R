@@ -52,7 +52,6 @@ ggplot(traits.db, aes(x=(log10(leng.leaf)),
 dotchart(log10(traits.db$leng.leaf))
 dotchart(log10(traits.db$leng.leaf.mean))
 dotchart(log10(traits.db$leng.lam.pet.mean))
-
 #### Creating final consensus variable ####
 
 # Making a new col that includes the two principal sources of information
@@ -71,7 +70,18 @@ traits.db$unit.leaf.leng <- with(traits.db, ifelse(!is.na(intermediate),
 ## Add new col whit or whitout leaf
 traits.db$leaf.presence <- with(traits.db, ifelse(leaf.type != "aphyllous", TRUE, FALSE))
 
+####Create variables to estimate leaf are from length and with of the blade
+traits.db$leng.blade.mean <- (traits.db$min.length.blade + traits.db$max.length.blade)/2
+traits.db$width.blade.mean <- (traits.db$min.width.blade + traits.db$max.width.blade)/2
+plot(log10(traits.db$leng.blade.mean) ~ log10(traits.db$width.blade.mean))
 
+######Area
+traits.db$area <- (traits.db$leng.blade.mean*traits.db$width.blade.mean)
+plot(log10(traits.db$VD.tip.um)~ log10(traits.db$area))
+###Fast check of the model
+lm.vdtip.leafarea <- lm(log10(traits.db$VD.tip.um)~ log10(traits.db$area)) 
+summary(lm.vdtip.leafarea)
+abline(lm.vdtip.leafarea, col = "red", lwd = 2)
 # Filtering species without data
 traits.db <- subset(traits.db, !is.na(unit.leaf.leng))
 
@@ -132,7 +142,7 @@ write.table(table1, "Results/tabla1.csv")
 
 
 rm(numeric_col, descriptive)
-
+table(traits.db$leaf.type)
 #### Models with aphyllus ####
 # To compare between different orders of magnitude we transformed into log10.
 # As the log10 of 0 is INF, we add +1 (constant) to unit.leaf.leng
@@ -485,4 +495,26 @@ out = "Results/table2.html"
 
 #abline(1.39, 0.086, col = "black", lwd = 2)
 #abline(1.39, 0.4, col = "red", lwd = 2)
+hist(log10(traits.db$VD.base.um))
+hist(log10(traits.db$VD.tip.um))
+traits.db$widening <- log10(traits.db$VD.base.um)/log10(traits.db$VD.tip.um)
+plot(log10(traits.db$widening))
+plot(traits.db$widening ~ log10(traits.db$stem.length.m))
+plot(log10(traits.db$widening) ~ log10(traits.db$stem.length.m))
 
+lm_widening.stem <- lm(traits.db$widening ~ log10(traits.db$stem.length.m))
+summary(lm_widening.stem)
+
+lm_widening.leaf.stem <- lm(log10(traits.db$widening) ~ 
+                              log10(traits.db$stem.length.m)* log10(traits.db$unit.leaf.leng+1))
+summary(lm_widening.leaf.stem)
+plot(log10(traits.db$widening) ~ log10(traits.db$unit.leaf.leng))
+plot(traits.db$widening ~ log10(traits.db$unit.leaf.leng))
+
+lm_widening.leaf <- lm(log10(traits.db$widening) ~ log10(traits.db$unit.leaf.leng+1))
+summary(lm_widening.leaf)
+
+lm_vdbase.stem <- lm(log10(traits.db$VD.base.um) ~ log10(traits.db$stem.length.m))
+summary(lm_vdbase.stem)
+lm_vdtip.stem <- lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m))
+summary(lm_vdtip.stem)
