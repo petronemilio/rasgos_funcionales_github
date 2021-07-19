@@ -85,7 +85,30 @@ abline(lm.vdtip.leafarea, col = "red", lwd = 2)
 ########Loading data from sean
 macquarie.data <- read.csv("data/macquarie_vessel_diameter_leaf_size.csv")
 macquarie.data.temp <- macquarie.data
-##########
+###From macquarie data we need to plot vd at petioles and leaf length
+macquarie.data<-macquarie.data[!is.na(macquarie.data$Hw_dia_pet..um.),]
+plot(macquarie.data$Hw_dia_pet..um.~ macquarie.data$elip_leaf_length_cm)
+plot(macquarie.data$Hw_dia_mid..um.~ macquarie.data$elip_leaf_length_cm)
+
+
+#
+lm.vdpet.leaflength <- lm(log10(macquarie.data$Hw_dia_pet..um.)~ log10(macquarie.data$elip_leaf_length_cm))
+summary(lm.vdpet.leaflength)
+pdf("Results/FigurePetVDLeaflength.pdf", height = 8, width = 8) # Para guardar en PDF
+png("Results/FiguraPetVDLeaflength.png", height = 480, width = 480) # Para guardar en PNG
+plot(log10(macquarie.data$Hw_dia_pet..um.)~log10(macquarie.data$elip_leaf_length_cm),
+     xaxt="n",yaxt="n",xlab= expression(paste("log"[10], " Leaf length (cm)")),
+     ylab= expression(paste("log"[10]," Petiole Vessel Diameter ", mu,"m")))
+# Labels... ylab= expression(paste("log"[10], " Vessel wall thickness ", mu, "m")))
+axis(1, at= seq(min(log10(macquarie.data$elip_leaf_length_cm)),
+                max(log10(macquarie.data$elip_leaf_length_cm)),0.4),cex.axis=0.8,
+     labels=c(0.2,0.5,1.3,3.3))
+#
+axis(2, at= seq(min(log10(macquarie.data$Hw_dia_pet..um.)),
+                max(log10(macquarie.data$Hw_dia_pet..um.)),0.2),cex.axis=0.8,
+     labels = c(3.5,5.5,8.5,14,22))
+abline(lm.vdpet.leaflength, col = "red", lwd = 2)
+dev.off()
 ##### Hacer una dataframe de las dos bases para comparar datos.
 olson.gleason <- traits.db %>% dplyr::select(family,genus,species,stem.length.m,
                                              VD.tip.um,unit.leaf.leng,area)
@@ -99,7 +122,7 @@ macquarie.data <- macquarie.data %>% dplyr::select(Family,Genus,
 #add column identifier
 macquarie.data <- cbind(macquarie.data,rep("Gleason",nrow(macquarie.data)))
 colnames(macquarie.data) <- c("family","genus","species","stem.length.m","VD.tip.um","unit.leaf.leng","area","Developer")
-
+#
 olson.gleason <- rbind(olson.gleason,macquarie.data)
 #
 plot(log10(olson.gleason$unit.leaf.leng),log10(olson.gleason$VD.tip.um), pch=16,
