@@ -10,7 +10,6 @@ traits <- read.csv("data/df_traits.csv", header = T)
 names(traits) #check names
 
 #### exploratory analyses ####
-
 # Select columns 
 traits.db<-traits[c(1:7,11:21)]
 names(traits.db) #check names
@@ -89,8 +88,6 @@ macquarie.data.temp <- macquarie.data
 macquarie.data<-macquarie.data[!is.na(macquarie.data$Hw_dia_pet..um.),]
 plot(macquarie.data$Hw_dia_pet..um.~ macquarie.data$elip_leaf_length_cm)
 plot(macquarie.data$Hw_dia_mid..um.~ macquarie.data$elip_leaf_length_cm)
-
-
 #
 lm.vdpet.leaflength <- lm(log10(macquarie.data$Hw_dia_pet..um.)~ log10(macquarie.data$elip_leaf_length_cm))
 summary(lm.vdpet.leaflength)
@@ -109,19 +106,82 @@ axis(2, at= seq(min(log10(macquarie.data$Hw_dia_pet..um.)),
      labels = c(3.5,5.5,8.5,14,22))
 abline(lm.vdpet.leaflength, col = "red", lwd = 2)
 dev.off()
+#Graficar los mid rib
+plot(log10(macquarie.data$Hw_dia_mid..um.)~ log10(macquarie.data$elip_leaf_length_cm))
+#
+macquarie.data <- macquarie.data.temp
+###From macquarie data we need to plot vd at petioles and leaf length
+macquarie.data<-macquarie.data[!is.na(macquarie.data$Hw_dia_mid..um.),]
+
+lm.vdmid.leaflength <- lm(log10(macquarie.data$Hw_dia_mid..um.)~ log10(macquarie.data$elip_leaf_length_cm))
+summary(lm.vdmid.leaflength)
+#PLot
+pdf("Results/FigureMidVDLeaflength.pdf", height = 8, width = 8) # Para guardar en PDF
+png("Results/FiguraMidVDLeaflength.png", height = 480, width = 480) # Para guardar en PNG
+plot(log10(macquarie.data$Hw_dia_mid..um.)~log10(macquarie.data$elip_leaf_length_cm),
+     xaxt="n",yaxt="n",xlab= expression(paste("log"[10], " Leaf length (cm)")),
+     ylab= expression(paste("log"[10]," Midrib Vessel Diameter ", mu,"m")))
+# Labels... ylab= expression(paste("log"[10], " Vessel wall thickness ", mu, "m")))
+axis(1, at= seq(min(log10(macquarie.data$elip_leaf_length_cm)),
+                max(log10(macquarie.data$elip_leaf_length_cm)),0.4),cex.axis=0.8,
+     labels=c(0.2,0.5,1.3,3.3))
+#
+axis(2, at= seq(min(log10(macquarie.data$Hw_dia_mid..um.)),
+                max(log10(macquarie.data$Hw_dia_mid..um.)),0.2),cex.axis=0.8,
+     labels = c(3.5,5.5,8.5,14,22))
+abline(lm.vdmid.leaflength, col = "blue", lwd = 2)
+dev.off()
+#Make plot in one
+pdf("Results/FigureMidandPetVDLeaflength.pdf", height = 8, width = 8) # Para guardar en PDF
+png("Results/FiguraMidanPetVDLeaflength.png", height = 480, width = 480) # Para guardar en PNG
+plot(log10(macquarie.data$Hw_dia_pet..um.)~log10(macquarie.data$elip_leaf_length_cm),
+     xaxt="n",yaxt="n",xlab= expression(paste("log"[10], " Leaf length (cm)")),
+     ylab= expression(paste("log"[10]," Midrib Vessel Diameter ", mu,"m")))
+abline(lm.vdpet.leaflength, col = "red", lwd = 2)
+points(log10(macquarie.data$Hw_dia_mid..um.)~log10(macquarie.data$elip_leaf_length_cm), col="blue")
+abline(lm.vdmid.leaflength, col = "blue", lwd = 2)
+axis(1, at= seq(min(log10(macquarie.data$elip_leaf_length_cm)),
+                max(log10(macquarie.data$elip_leaf_length_cm)),0.4),cex.axis=0.8,
+     labels=c(0.2,0.5,1.3,3.3))
+#
+axis(2, at= seq(min(log10(macquarie.data$Hw_dia_mid..um.)),
+                max(log10(macquarie.data$Hw_dia_mid..um.)),0.2),cex.axis=0.8,
+     labels = c(3.5,5.5,8.5,14,22))
+dev.off()
 ##### Hacer una dataframe de las dos bases para comparar datos.
-olson.gleason <- traits.db %>% dplyr::select(family,genus,species,stem.length.m,
-                                             VD.tip.um,unit.leaf.leng,area)
+olson.gleason <- traits.db %>% dplyr::select(order,family,genus,species.epithet,stem.length.m,
+                                             VD.base.um,VD.tip.um,unit.leaf.leng,leng.blade.mean,
+                                             width.blade.mean,area)
 #add column identifier
 olson.gleason <- cbind(olson.gleason, rep("Olson",nrow(olson.gleason)))
-colnames(olson.gleason)[8] <- "Developer"
+colnames(olson.gleason)[12] <- "Developer"
 #
-macquarie.data <- macquarie.data %>% dplyr::select(Family,Genus,
+macquarie.data <- macquarie.data.temp
+macquarie.data <- macquarie.data %>% dplyr::select(Order, Family,Genus,
                                                    Species,max_ht..m.,vessel.dia..um.,
+                                                   Hw_dia_pet..um.,Hw_dia_mid..um.,
                                                    elip_leaf_length_cm,leaf.size..cm2.)
+
 #add column identifier
 macquarie.data <- cbind(macquarie.data,rep("Gleason",nrow(macquarie.data)))
-colnames(macquarie.data) <- c("family","genus","species","stem.length.m","VD.tip.um","unit.leaf.leng","area","Developer")
+colnames(macquarie.data) <- c("order","family","genus","species.epithet","stem.length.m","VD.tip.um",
+                              "VD.pet.um","VD.mid.um","unit.leaf.leng","area","Developer")
+#Add columns with nas for the missig data from the other database
+macquarie.data <- cbind(macquarie.data,rep(NA,nrow(macquarie.data)))
+macquarie.data <- cbind(macquarie.data,rep(NA,nrow(macquarie.data)))
+macquarie.data <- cbind(macquarie.data,rep(NA,nrow(macquarie.data)))
+#leng.blade
+colnames(macquarie.data)[12] <- "VD.base.um"
+colnames(macquarie.data)[13] <- "leng.blade.mean"
+colnames(macquarie.data)[14] <- "width.blade.mean"
+#
+olson.gleason <- cbind(olson.gleason,rep(NA,nrow(olson.gleason)))
+olson.gleason <- cbind(olson.gleason,rep(NA,nrow(olson.gleason)))
+#
+colnames(olson.gleason)[13] <- "VD.pet.um"
+colnames(olson.gleason)[14] <- "VD.mid.um"
+#
+macquarie.data <- macquarie.data[ , c(1,2,3,4,5,12,6,9,13,14,10,11,7,8)]
 #
 olson.gleason <- rbind(olson.gleason,macquarie.data)
 #
