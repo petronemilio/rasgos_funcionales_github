@@ -4,7 +4,7 @@ library(corrplot)
 library(Hmisc)
 library(dplyr)
 library(stargazer)
-
+library(lme4)
 # Load data.frame
 traits <- read.csv("data/df_traits.csv", header = T)
 names(traits) #check names
@@ -75,7 +75,7 @@ traits.db$width.blade.mean <- (traits.db$min.width.blade + traits.db$max.width.b
 plot(log10(traits.db$leng.blade.mean) ~ log10(traits.db$width.blade.mean))
 
 ######Area
-traits.db$area <- (traits.db$leng.blade.mean*traits.db$width.blade.mean)
+traits.db$area <- (traits.db$unit.leaf.leng)^2
 plot(log10(traits.db$VD.tip.um)~ log10(traits.db$area))
 ###Fast check of the model
 lm.vdtip.leafarea <- lm(log10(traits.db$VD.tip.um)~ log10(traits.db$area)) 
@@ -136,7 +136,7 @@ pdf("Results/FigureMidandPetVDLeaflength.pdf", height = 8, width = 8) # Para gua
 png("Results/FiguraMidanPetVDLeaflength.png", height = 480, width = 480) # Para guardar en PNG
 plot(log10(macquarie.data$Hw_dia_pet..um.)~log10(macquarie.data$elip_leaf_length_cm),
      xaxt="n",yaxt="n",xlab= expression(paste("log"[10], " Leaf length (cm)")),
-     ylab= expression(paste("log"[10]," Midrib Vessel Diameter ", mu,"m")))
+     ylab= expression(paste("log"[10]," Vessel Diameter ", mu,"m")))
 abline(lm.vdpet.leaflength, col = "red", lwd = 2)
 points(log10(macquarie.data$Hw_dia_mid..um.)~log10(macquarie.data$elip_leaf_length_cm), col="blue")
 abline(lm.vdmid.leaflength, col = "blue", lwd = 2)
@@ -184,13 +184,38 @@ colnames(olson.gleason)[14] <- "VD.mid.um"
 macquarie.data <- macquarie.data[ , c(1,2,3,4,5,12,6,9,13,14,10,11,7,8)]
 #
 olson.gleason <- rbind(olson.gleason,macquarie.data)
-#
+#####Summary table combining both data frames ####
+summary(olson.gleason$unit.leaf.leng)
+#####
+plot(log10(traits.db$area)~log10(traits.db$unit.leaf.leng))
+
 plot(log10(olson.gleason$unit.leaf.leng),log10(olson.gleason$VD.tip.um), pch=16,
      xlab = expression(paste("log"[10]," Leaf length (cm)"))
      , ylab = expression(paste("log"[10], " Tip Vessel diameter (", mu,"m)")))
 points(log10(olson.gleason$unit.leaf.leng[olson.gleason$Developer=="Gleason"]),
        log10(olson.gleason$VD.tip.um[olson.gleason$Developer=="Gleason"]),col="red",pch=16)
+####
+plot(log10(olson.gleason$area),log10(olson.gleason$VD.tip.um), pch=16,
+     xlab = expression(paste("log"[10]," Leaf length (cm)"))
+     , ylab = expression(paste("log"[10], " Tip Vessel diameter (", mu,"m)")))
+points(log10(olson.gleason$area[olson.gleason$Developer=="Gleason"]),
+       log10(olson.gleason$VD.tip.um[olson.gleason$Developer=="Gleason"]),col="red",pch=16)
+#
+hist(olson.gleason$area)
+hist(log10(olson.gleason$area))
+plot(log10(olson.gleason$unit.leaf.leng)~log10(olson.gleason$area))
+plot(log10(olson.gleason$unit.leaf.leng)~log10(olson.gleason$area))
 
+olson.gleason<-subset(olson.gleason, area > 0.00001)
+lm.vdtip.area.both <- lm(log10(as.integer(olson.gleason$VD.tip.um))~
+                           log10((olson.gleason$area)))
+summary(lm.vdtip.area.both)
+plot(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area))
+lm.vdtip.area.both.dev <- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area)+ olson.gleason$Developer)
+summary(lm.vdtip.area.both.dev)
+####LMMM
+glm.vdtip.area<- lmer(log10(VD.tip.um) ~ log10(area)+ (1|Developer), data = olson.gleason)
+summary(glm.vdtip.area)
 #
 lm.vdtip.leaf.both<- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$unit.leaf.leng))
 summary(lm.vdtip.leaf.both)
