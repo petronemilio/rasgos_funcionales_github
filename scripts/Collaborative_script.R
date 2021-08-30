@@ -5,6 +5,8 @@ library(Hmisc)
 library(dplyr)
 library(stargazer)
 library(lme4)
+library(relaimpo)
+
 # Load data.frame
 traits <- read.csv("data/df_traits.csv", header = T)
 names(traits) #check names
@@ -109,6 +111,21 @@ dev.off()
 #Graficar los mid rib
 plot(log10(macquarie.data$Hw_dia_mid..um.)~ log10(macquarie.data$elip_leaf_length_cm))
 #
+#
+lm.vdtip.leaflength.alt <- lm(log10(macquarie.data$vessel.dia..um.)~log10(macquarie.data$max_ht..m.)
+   +log10(macquarie.data$elip_leaf_length_cm))
+summary(lm.vdtip.leaflength.alt)   
+####Relaimpo
+metrics.base <- calc.relimp(lm.vdtip.leaflength.alt, 
+                            type = c("lmg","first", "last","betasq", "pratt"),rela = TRUE)
+boot.vdtip <- boot.relimp(lm.vdtip.leaflength.alt, b = 1000, type = "lmg", bty = "perc",level = 0.95)
+eval.vdbase <- booteval.relimp(boot.vdtip, typesel = c("lmg", "pmvd"), level = 0.9,
+                               bty = "perc", norank = TRUE)
+plot(metrics.base, names.abbrev = 30)
+plot(booteval.relimp(boot.vdbase, typesel = c("lmg", "pmvd"), level = 0.9),
+     names.abbrev = 30, bty = "perc")
+
+
 macquarie.data <- macquarie.data.temp
 ###From macquarie data we need to plot vd at petioles and leaf length
 macquarie.data<-macquarie.data[!is.na(macquarie.data$Hw_dia_mid..um.),]
@@ -207,24 +224,67 @@ plot(log10(olson.gleason$unit.leaf.leng)~log10(olson.gleason$area))
 plot(log10(olson.gleason$unit.leaf.leng)~log10(olson.gleason$area))
 
 olson.gleason<-subset(olson.gleason, area > 0.00001)
-lm.vdtip.area.both <- lm(log10(as.integer(olson.gleason$VD.tip.um))~
+lm.vdtip.area.both <- lm(log10(olson.gleason$VD.tip.um)~
                            log10((olson.gleason$area)))
 summary(lm.vdtip.area.both)
 plot(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area))
 lm.vdtip.area.both.dev <- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area)+ olson.gleason$Developer)
 summary(lm.vdtip.area.both.dev)
-####LMMM
+####GLM
 glm.vdtip.area<- lmer(log10(VD.tip.um) ~ log10(area)+ (1|Developer), data = olson.gleason)
 summary(glm.vdtip.area)
 #
+glm.vdtip.interceptslope <- lmer(log10(VD.tip.um) ~ log10(area)+ (log10(area)|Developer), data = olson.gleason)
+summary(glm.vdtip.interceptslope)
+?isSingular
+ 
+
 lm.vdtip.leaf.both<- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$unit.leaf.leng))
 summary(lm.vdtip.leaf.both)
+#
+lm.vdtip.leaf.both.dev<- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$unit.leaf.leng)+ olson.gleason$Developer)
+summary(lm.vdtip.leaf.both.dev)
+plot(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$unit.leaf.leng))
+abline(lm.vdtip.leaf.both.dev,col = "blue", lwd = 2)
+abline((lm.vdtip.leaf.both.dev$coefficients[1]+lm.vdtip.leaf.both.dev$coefficients[3]),
+        lm.vdtip.leaf.both.dev$coefficients[2], col="red",lwd=2)
+
+
+lm.vdtip.leaf.both.dev.int<- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$unit.leaf.leng)*olson.gleason$Developer)
+summary(lm.vdtip.leaf.both.dev.int)
 #
 lm.vdtip.leafarea <- lm(log10(olson.gleason$VD.tip.um)~ log10(olson.gleason$area)) 
 summary(lm.vdtip.leafarea)
 plot(log10(olson.gleason$VD.tip.um)~ log10(olson.gleason$area))
 points(log10(olson.gleason$area[olson.gleason$Developer=="Gleason"]),
        log10(olson.gleason$VD.tip.um[olson.gleason$Developer=="Gleason"]),col="red")
+
+plot(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$stem.length.m))
+lm.vdtip.stemlength <- lm(log10(olson.gleason$VD.tip.um)~ log10(olson.gleason$stem.length.m)+
+                          olson.gleason$Developer) 
+summary(lm.vdtip.stemlength)
+abline(lm.vdtip.stemlength,col = "blue", lwd = 2)
+abline((lm.vdtip.stemlength$coefficients[1]+lm.vdtip.stemlength$coefficients[3]),
+       lm.vdtip.stemlength$coefficients[2],col="red",lwd=2)
+points(log10(olson.gleason$stem.length.m[olson.gleason$Developer=="Gleason"]),
+       log10(olson.gleason$VD.tip.um[olson.gleason$Developer=="Gleason"]),
+       col="blue",pch=16)
+######Modelo de stem length, leaf length y developer#####
+olson.gleason <- subset(olson.gleason, olson.gleason$unit.leaf.leng >0.0001)
+olson.gleason <- subset(olson.gleason, olson.gleason$stem.length.m >0.0001)
+olson.gleason$Developer<- as.factor(olson.gleason$Developer)
+lm.vdtip.leaflength.stemlength <- lm(log10(olson.gleason$VD.tip.um)~ log10(olson.gleason$stem.length.m)+
+                            log10(olson.gleason$unit.leaf.leng)+ olson.gleason$Developer) 
+summary(lm.vdtip.leaflength.stemlength)
+#####Relaimpo #####
+metrics.base <- calc.relimp(lm.vdtip.leaflength.stemlength, 
+                            type = c("lmg","first", "last","betasq", "pratt"),rela = TRUE)
+boot.vdbase <- boot.relimp(lm.vdtip.leaflength.stemlength, b = 1000, type = "lmg", bty = "perc",level = 0.95)
+eval.vdbase <- booteval.relimp(boot.vdbase, typesel = c("lmg", "pmvd"), level = 0.9,
+                               bty = "perc", norank = TRUE)
+plot(metrics.base, names.abbrev = 3)
+plot(booteval.relimp(boot.vdbase, typesel = c("lmg", "pmvd"), level = 0.9),
+     names.abbrev = 30, bty = "perc")
 
 ###### Filtering species without data#####
 traits.db <- subset(traits.db, !is.na(unit.leaf.leng))
@@ -270,6 +330,19 @@ corrplot(leng.leaf.matrix$r, type="upper", order="hclust",
 dev.off()
 
 rm(leng.leaf.cor, leng.leaf.matrix)
+#
+# Bivariate correlation analysis OlsonGleason
+names(olson.gleason) #Check names
+leng.leaf.cor <-subset(olson.gleason[, c(5, 7,8,11)]) # Select variables of interest
+
+# Correlation matrix
+leng.leaf.matrix <- rcorr(as.matrix(leng.leaf.cor))
+leng.leaf.matrix$r # Correlation values between variables
+# Plotting
+corrplot(leng.leaf.matrix$r, type="upper", order="hclust", 
+         p.mat = leng.leaf.matrix$P, sig.level = 0.05, bg="WHITE",
+         tl.col = "black", tl.srt = 45, pch.cex=1, outline=T,
+         addCoef.col = T)
 
 #### Descriptive statistics ####
 numeric_col <- select_if(traits.db, is.numeric)
