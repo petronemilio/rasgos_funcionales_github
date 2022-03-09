@@ -170,7 +170,7 @@ olson.gleason <- traits.db %>% dplyr::select(order,family,genus,species.epithet,
                                              VD.base.um,VD.tip.um,unit.leaf.leng,leng.blade.mean,
                                              width.blade.mean,area)
 #add column identifier
-olson.gleason <- cbind(olson.gleason, rep("Olson",nrow(olson.gleason)))
+olson.gleason <- cbind(olson.gleason, factor(rep("Olson",nrow(olson.gleason))))
 colnames(olson.gleason)[12] <- "Developer"
 #
 macquarie.data <- macquarie.data.temp
@@ -180,7 +180,7 @@ macquarie.data <- macquarie.data %>% dplyr::select(Order, Family,Genus,
                                                    elip_leaf_length_cm,leaf.size..cm2.)
 
 #add column identifier
-macquarie.data <- cbind(macquarie.data,rep("Gleason",nrow(macquarie.data)))
+macquarie.data <- cbind(macquarie.data,factor(rep("Gleason",nrow(macquarie.data))))
 colnames(macquarie.data) <- c("order","family","genus","species.epithet","stem.length.m","VD.tip.um",
                               "VD.pet.um","VD.mid.um","unit.leaf.leng","area","Developer")
 #Add columns with nas for the missig data from the other database
@@ -228,8 +228,27 @@ lm.vdtip.area.both <- lm(log10(olson.gleason$VD.tip.um)~
                            log10((olson.gleason$area)))
 summary(lm.vdtip.area.both)
 plot(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area))
+#
+contrasts(olson.gleason$Developer)
+#
 lm.vdtip.area.both.dev <- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area)+ olson.gleason$Developer)
 summary(lm.vdtip.area.both.dev)
+lm.vdtip.area.both.dev.int <- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area)*olson.gleason$Developer)
+summary(lm.vdtip.area.both.dev.int)
+####Checking contrasts
+contrasts(olson.gleason$Developer)
+#
+olson.gleason <- olson.gleason %>%
+  mutate(Developer = relevel(olson.gleason$Developer, ref = "Gleason"))
+contrasts(as.factor(olson.gleason$Developer))
+#
+lm.vdtip.area.both.dev.relevel <- lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area)+ olson.gleason$Developer)
+lm.vdtip.area.both.dev.relevel.int <- 
+                              lm(log10(olson.gleason$VD.tip.um)~log10(olson.gleason$area)*olson.gleason$Developer)
+summary(lm.vdtip.area.both.dev)
+summary(lm.vdtip.area.both.dev.relevel)
+summary(lm.vdtip.area.both.dev.int)
+summary(lm.vdtip.area.both.dev.relevel.int)
 ####GLM
 glm.vdtip.area<- lmer(log10(VD.tip.um) ~ log10(area)+ (1|Developer), data = olson.gleason)
 summary(glm.vdtip.area)
