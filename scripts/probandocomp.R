@@ -8,9 +8,7 @@ library(asbio)
 library(relaimpo)
 ######Creating a temporal database and removing aphyllous species#####
 traits.temp <- traits.db
-
 traits.db <- subset(traits.db, leaf.type != "aphyllous")
-
 ###### Adjust the models for vdtip #####
 lm.vdtip.stl <- lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m))
 lm.vdtip.leaf <- lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$unit.leaf.leng))
@@ -18,7 +16,6 @@ lm.vdtip.stlplusleaf <- lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.len
                              log10(traits.db$unit.leaf.leng))
 lm.vdtip.stlintleaf <- lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m) *
                             log10(traits.db$unit.leaf.leng))
-
 #####Check the models
 summary(lm.vdtip.stl)
 anova(lm.vdtip.stl)
@@ -44,29 +41,19 @@ confint(lm.vdtip.stlintleaf)
 #SS Extra ⫽Full SS Regression ⫺Reduced SS Regression
 anova(lm.vdtip.stl,lm.vdtip.stlintleaf)
 anova( lm.vdtip.leaf,lm.vdtip.stl,lm.vdtip.stlplusleaf,lm.vdtip.stlintleaf)
-####
-hier.part(traits.db$VD.tip.um, traits.db[,c("stem.length.m","unit.leaf.leng")], gof = "Rsqu")
-rand.hp(traits.db$VD.tip.um, traits.db[,c("stem.length.m","unit.leaf.leng")], gof = "Rsqu",
-        num.reps = 100)$Iprobs
-####
-
-metrics <- calc.relimp(lm.vdtip.stlplusleaf, type = c("lmg","first", "last","betasq", "pratt"),
-                       rela = TRUE)
+########
+metrics <- calc.relimp(lm.vdtip.stlintleaf, 
+                       type = c("lmg"))
 metrics
-boot.vdtip <- boot.relimp(lm.vdtip.stlplusleaf, b = 1000, type = "lmg", bty = "perc",level = 0.95)
+boot.vdtip <- boot.relimp(lm.vdtip.stlintleaf, b = 1000, type = "lmg", bty = "perc",level = 0.95,
+                          fixed=FALSE)
 eval.vdtip <- booteval.relimp(boot.vdtip, typesel = c("lmg", "pmvd"), level = 0.9,
                               bty = "perc", norank = TRUE)
+
 eval.vdtip
 plot(metrics, names.abbrev = 3)
 plot(booteval.relimp(boot.vdtip, typesel = c("lmg", "pmvd"), level = 0.9),
      names.abbrev = 2, bty = "perc")
-
-#(SSEreduced - SSEfull) / SSEreduced
-#Partial r2
-partial.R2(lm.vdtip.leaf, lm.vdtip.stlintleaf)
-partial.R2(lm.vdtip.stl, lm.vdtip.stlintleaf)
-partial.R2(lm.vdtip.leaf,lm.vdtip.stlplusleaf)
-partial.R2(lm.vdtip.stl,lm.vdtip.stlplusleaf)
 
 ##### VD base models #####
 lm.vdbase.stl <- lm(log10(traits.db$VD.base.um) ~ log10(traits.db$stem.length.m))
@@ -98,18 +85,7 @@ confint(lm.vdbase.stlintleaf)
 #
 anova( lm.vdbase.leaf,lm.vdbase.stl,lm.vdbase.stlplusleaf,lm.vdbase.stlintleaf)
 ###
-hier.part(traits.db$VD.base.um, traits.db[,c("stem.length.m","unit.leaf.leng")], gof = "Rsqu")
-rand.hp(traits.db$VD.base.um, traits.db[,c("stem.length.m","unit.leaf.leng")], gof = "Rsqu",
-        num.reps = 100)$Iprobs
-?rand.hp
-#Partial r2
-partial.R2(lm.vdbase.leaf, lm.vdbase.stlintleaf)
-partial.R2(lm.vdbase.stl, lm.vdbase.stlintleaf)
-partial.R2(lm.vdbase.leaf,lm.vdbase.stlplusleaf)
-partial.R2(lm.vdbase.stl,lm.vdbase.stlplusleaf)
-
-metrics.base <- calc.relimp(lm.vdbase.stlplusleaf, type = c("lmg","first", "last","betasq", "pratt"),
-                       rela = TRUE)
+metrics.base <- calc.relimp(lm.vdbase.stlplusleaf, type = c("lmg","first", "last","betasq", "pratt"))
 metrics.base
 boot.vdbase <- boot.relimp(lm.vdbase.stlplusleaf, b = 1000, type = "lmg", bty = "perc",level = 0.95)
 eval.vdbase <- booteval.relimp(boot.vdbase, typesel = c("lmg", "pmvd"), level = 0.9,
