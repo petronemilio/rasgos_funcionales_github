@@ -13,10 +13,10 @@ library(car)
 library(asbio)
 library(lavaan)
 library(semPlot)
+#devtools::install_github('SachaEpskamp/semPlot')
 # Load data.frame
 traits <- read.csv("data/df_traits.csv", header = T)
 names(traits) #check names
-
 #### exploratory analyses ####
 # Select columns 
 traits.db<-traits[c(1:7,11:21)]
@@ -76,6 +76,7 @@ plot(log10(traits.db$leng.blade.mean) ~ log10(traits.db$width.blade.mean))
 ######Area
 traits.db$area <- (traits.db$unit.leaf.leng)^2
 plot(log10(traits.db$VD.tip.um)~ log10(traits.db$area))
+
 ######
 wood_density <- read.csv("data/WD_VDSD.csv")
 hist(wood_density$Wood.Density.g.ml)
@@ -119,7 +120,16 @@ ggplot(traits.db, aes(x=(log10(unit.leaf.leng)),
   geom_point(size=1)+stat_smooth(formula= y~x, method = "lm")+
   geom_text(position = "identity", angle=25, size=2.5, alpha=0.8)
 
+plot(log10(traits.db$wood.density) ~ log10(traits.db$VD.tip.um))
+###
 
+#####
+monocot<- c("Alismatales", "Arecales", "Asparagales", "Commelinales", "Liliales",
+            "Pandanales", "Poales", "Zingiberales")
+#
+traits.db.dicots <- traits.db[!(traits.db$order %in% monocot),]
+#
+plot(log10(traits.db.dicots$wood.density) ~ log10(traits.db.dicots$unit.leaf.leng))
 # Check for outliers in the new variable (unit.leaf.leng)
 dotchart(traits.db$unit.leaf.leng)
 # To compare between different orders of magnitude we transformed into log10. 
@@ -127,7 +137,7 @@ dotchart(log10(traits.db$unit.leaf.leng))
 hist(log10(traits.db$unit.leaf.leng))
 # Bivariate correlation analysis
 names(traits.db) #Check names
-leng.leaf.cor <-subset(traits.db[, c(5, 6, 7, 18)]) # Select variables of interest
+leng.leaf.cor <-subset(traits.db[, c(5, 6, 7, 18,20)]) # Select variables of interest
 # Correlation matrix
 leng.leaf.matrix <- rcorr(as.matrix(leng.leaf.cor))
 leng.leaf.matrix$r # Correlation values between variables
@@ -184,6 +194,12 @@ lm.vdtip.stlplusleaf <- lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.len
                              log10(traits.db$unit.leaf.leng))
 lm.vdtip.stlintleaf <- lm(log10(traits.db$VD.tip.um) ~ log10(traits.db$stem.length.m) *
                             log10(traits.db$unit.leaf.leng))
+#With density
+lm.wd.vdtip <- lm(log10(traits.db$wood.density) ~log10(traits.db$VD.tip.um))
+summary(lm.wd.vdtip)
+lm.wd.vdtipvdbase <- lm(log10(traits.db$wood.density) ~log10(traits.db$VD.tip.um)*
+                          log10(traits.db$VD.base.um))
+summary(lm.wd.vdtipvdbase)
 #####Check the models
 summary(lm.vdtip.stl) #Vdtip ~ stem length
 anova(lm.vdtip.stl) 
@@ -203,6 +219,20 @@ anova(lm.vdtip.stlintleaf)
 plot(lm.vdtip.stlintleaf)
 confint(lm.vdtip.stlintleaf)
 ##4 models. Now compared the ss
+###Plots
+###Plot
+pdf("Results/Figureleaflengthvessels.pdf", height = 8, width = 8) # Para guardar en PDF
+par(mfrow= c(2,1))
+plot(traits.db$VD.tip.um ~ traits.db$unit.leaf.leng,cex=1.7,
+     xlab=expression(paste("Leaf length (cm)")),log="xy",
+     ylab=expression(paste("Apical vessel diameter ( ", mu, "m )")))
+abline(lm.vdtip.leaf)
+plot(traits.db$VD.base.um ~ traits.db$unit.leaf.leng,cex=1.7,
+     xlab=expression(paste("Leaf length (cm)")),log="xy",
+     ylab=expression(paste("Basal vessel diameter ( ", mu, "m )")))
+abline(lm.vdbase.leaf)
+dev.off()
+
 #SS Extra Full SS Regression Reduced SS Regression
 anova(lm.vdtip.stl,lm.vdtip.stlintleaf)
 anova( lm.vdtip.leaf,lm.vdtip.stl,lm.vdtip.stlplusleaf,lm.vdtip.stlintleaf)
@@ -242,6 +272,21 @@ confint(lm.vdbase.stlplusleaf)
 summary(lm.vdbase.stlintleaf)#vd base ~ leaf length + stem length +(sl*ll)
 rm(lm.vdbase.stlintleaf)#remove model with interaction because int is not significant
 #
+pdf("Results/Figurelestemlengthvessels.pdf", height = 8, width = 8) # Para guardar en PDF
+par(mfrow= c(2,1))
+plot(traits.db$VD.tip.um ~ traits.db$stem.length.m,cex=1.7,
+     xlab=expression(paste("Stem length (m)")),log="xy",
+     ylab=expression(paste("Apical vessel diameter ( ", mu, "m )")))
+abline(lm.vdtip.stl)
+points(traits.temp$VD.tip.um[traits.temp$leaf.type=="aphyllous"]~
+         traits.db$stem.length.m[traits.temp$leaf.type=="aphyllous"],col="red",cex=1.7)
+plot(traits.db$VD.base.um ~ traits.db$stem.length.m,cex=1.7,
+     xlab=expression(paste("Stem length (m)")),log="xy",
+     ylab=expression(paste("Basal vessel diameter ( ", mu, "m )")))
+abline(lm.vdbase.stl)
+points(traits.temp$VD.base.um[traits.temp$leaf.type=="aphyllous"]~
+         traits.db$stem.length.m[traits.temp$leaf.type=="aphyllous"],col="red",cex=1.7)
+dev.off()
 anova(lm.vdbase.leaf,lm.vdbase.stl,lm.vdbase.stlplusleaf)
 ###
 metrics.base <- calc.relimp(lm.vdbase.stlplusleaf, type = c("lmg"))#relaimpo using lmg method
@@ -252,6 +297,18 @@ eval.vdbase <- booteval.relimp(boot.vdbase, typesel = c("lmg"), level = 0.9,
 plot(metrics.base, names.abbrev = 3)
 plot(booteval.relimp(boot.vdbase, typesel = c("lmg", "pmvd"), level = 0.9),
      names.abbrev = 2, bty = "perc")
+####Make model for wood density
+lm.wd.stl <- lm(traits.db$wood.density ~ log10(traits.db$stem.length.m))
+lm.wd.leaf <- lm(traits.db$wood.density ~ log10(traits.db$unit.leaf.leng))
+lm.wd.stlplusleaf <- lm(traits.db$wood.density ~ log10(traits.db$stem.length.m) + 
+                              log10(traits.db$unit.leaf.leng))
+lm.wd.stlintleaf <- lm(traits.db$wood.density ~ log10(traits.db$stem.length.m) *
+                             log10(traits.db$unit.leaf.leng))
+#
+summary(lm.wd.stl)
+summary(lm.wd.leaf)
+summary(lm.wd.stlplusleaf)
+plot(traits.db$wood.density ~ log10(traits.db$unit.leaf.leng))
 ####Make plots of relaimpo for both models
 pdf("Results/FigureRelimpvdtip.pdf", height = 8, width = 8) # Para guardar en PDF
 plot(booteval.relimp(boot.vdtip, typesel ="lmg", level = 0.9),
